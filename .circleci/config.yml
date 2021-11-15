@@ -28,8 +28,9 @@ jobs:
       - run: 
           name: "Deploy"
           command: |
+            zip smartq-front.zip -r .;
             chmod +x ./install.sh;
-            scp -o StrictHostKeyChecking=no fe-build.zip $SSH_HOST:fe-build.zip;
+            scp -o StrictHostKeyChecking=no smartq-front.zip $SSH_HOST:smartq-front.zip;
             scp -o StrictHostKeyChecking=no install.sh $SSH_HOST:install.sh;
             ssh -o StrictHostKeyChecking=no $SSH_HOST './install.sh';
 

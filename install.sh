@@ -1,3 +1,3 @@
-unzip -o fe-build.zip -d /srv/back-itp
-rm -rf fe-build.zip
+unzip -o smartq-front.zip -d /srv/back-itp
+rm -rf smartq-front.zip
 rm -rf install.sh
