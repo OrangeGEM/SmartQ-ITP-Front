@@ -12,12 +12,18 @@ import Auth from './Auth/Auth.jsx';
 const GlobalStyles = createGlobalStyle`
   body{
     margin: 0;
+    padding: 0;
+    font-family: DM Mono;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
   }
 `;
 
 export default function App() {
   return (
     <BrowserRouter>
+      <GlobalStyles />
       <Routes>
         <Route path="/" element={<LP />} />
         <Route path="/auth" element={<Auth />} />
