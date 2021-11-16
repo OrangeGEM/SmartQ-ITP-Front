@@ -1,13 +1,13 @@
 import React from 'react';
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-} from 'react-router-dom';
+  BrowserRouter,
+  Routes,
+  Route
+} from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 
-import LP from './LP/LP';
+import LP from './LP/LP.jsx';
+import Auth from './Auth/Auth.jsx';
 
 const GlobalStyles = createGlobalStyle`
   body{
@@ -17,10 +17,12 @@ const GlobalStyles = createGlobalStyle`
 
 export default function App() {
   return (
-    <Router>
-      <GlobalStyles />
-      <LP />
-    </Router>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LP />} />
+        <Route path="/auth" element={<Auth />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

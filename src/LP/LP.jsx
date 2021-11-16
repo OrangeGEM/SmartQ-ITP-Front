@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from "react-router-dom";
+
 
 import Footer from './Footer/Footer';
 import Header from './Header/Header';
@@ -16,7 +18,7 @@ const Conteiner = styled.div`
 export default function LP() {
     return (
         <Conteiner>
-            Ololo
+            <Link to="/auth">Auth</Link>
         </Conteiner>
     )
 }
