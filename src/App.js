@@ -7,7 +7,7 @@ import {
 import { createGlobalStyle } from "styled-components";
 
 import LP from './LP/LP.jsx';
-import Auth from './Auth/Auth.jsx';
+import Auth from './Auth/Auth.jsx'
 
 const GlobalStyles = createGlobalStyle`
   body{
@@ -25,7 +25,7 @@ export default function App() {
     <BrowserRouter>
       <GlobalStyles />
       <Routes>
-        <Route path="/" element={<LP />} />
+        <Route path="/" element={<LP />} exact/>
         <Route path="/auth" element={<Auth />} />
       </Routes>
     </BrowserRouter>
