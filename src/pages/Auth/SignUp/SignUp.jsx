@@ -4,23 +4,22 @@ import { Link } from "react-router-dom";
 
 import { Container, AuthContainer, Image, FormContainer, InputField, ButtonField, LinkText, FooterContainer, FooterForm } from '../styled';
 
-import logo from '../../images/Auth-logo.png';
-import facebook from '../../images/Facebook.png';
-import google from '../../images/Google.png';
+import logo from '../../../images/Auth-logo.png';
+import facebook from '../../../images/Facebook.png';
+import google from '../../../images/Google.png';
 
 
-export default function Auth() {
-    let fieldsValue = {};
+export default function SignUp() {
 
     function SendData(e) {
         e.preventDefault()
         const target = e.target;
-        fieldsValue = {
+        let data = {
             'email' : target.email.value,
             'password' : target.password.value,
             'rpassword' : target.rpassword.value
         }
-        console.log(fieldsValue);
+        console.log(data);
     }
 
 

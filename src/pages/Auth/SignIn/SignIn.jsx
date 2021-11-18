@@ -3,14 +3,14 @@ import { Link } from "react-router-dom";
 
 
 import { Container, AuthContainer, Image, FormContainer, InputField, ButtonField, LinkText, FooterContainer } from '../styled';
-import logo from '../../images/Auth-logo.png';
+import logo from '../../../images/Auth-logo.png';
 
 
 function testMessage() {
     console.log("Test");
 }
 
-export default function Auth() {
+export default function SignIn() {
     return (
         <Container>
             <AuthContainer>
