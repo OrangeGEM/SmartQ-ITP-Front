@@ -18,7 +18,7 @@ const Conteiner = styled.div`
 export default function LP() {
     return (
         <Conteiner>
-            <Link to="/auth">Auth</Link>
+            <Link to="/signin">Auth</Link>
         </Conteiner>
     )
 }

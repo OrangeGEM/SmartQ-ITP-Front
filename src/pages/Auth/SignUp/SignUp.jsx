@@ -8,18 +8,29 @@ import logo from '../../../images/Auth-logo.png';
 import facebook from '../../../images/Facebook.png';
 import google from '../../../images/Google.png';
 
+import { useHttp } from '../../../hooks/http.hook'
 
 export default function SignUp() {
+    const { request } = useHttp();
 
-    function SendData(e) {
+
+    async function SendData(e) {
         e.preventDefault()
         const target = e.target;
-        let data = {
+        let form = {
             'email' : target.email.value,
             'password' : target.password.value,
             'rpassword' : target.rpassword.value
         }
-        console.log(data);
+
+        try {
+            console.log(form);
+            const data = await request('/api/auth/register', 'POST', {...form})
+            console.log(data.message);
+        } catch(e) {
+            console.log()
+        }
+
     }
 
 
@@ -33,7 +44,7 @@ export default function SignUp() {
                     <InputField type="email" placeholder="Email" name="email"></InputField>
                     <InputField type="password" placeholder="Password" name="password"></InputField>
                     <InputField type="password" placeholder="Repeat password" name="rpassword"></InputField>
-                    <ButtonField type="submit" value="SIGN IN" />
+                    <ButtonField type="submit" value="SIGN UP" />
                     <FooterForm>
                         <Image src={google}/>
                         <Image src={facebook} />
