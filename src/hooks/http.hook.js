@@ -19,7 +19,7 @@ export const useHttp = () => {
 
             return data;
         } catch (e) {
-            console.log('catch e', e.message);
+            console.log('catch e: \n', e.message);
             throw e;
         }
     }, [])

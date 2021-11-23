@@ -24,13 +24,19 @@ export default function SignUp() {
         }
 
         try {
+            if(form.password.length < 6 || form.password != form.rpassword)
+                throw new SyntaxError("Данные некорректны");
+
             console.log(form);
-            const data = await request('/api/auth/register', 'POST', {...form})
+            const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/register`, 'POST', {...form})
             console.log(data.message);
         } catch(e) {
-            console.log()
+            if(e.name == "SyntaxError") {
+                console.log("Данные некорректны");
+            } else {
+                console.log(e)
+            }
         }
-
     }
 
 
@@ -41,7 +47,7 @@ export default function SignUp() {
             <AuthContainer>
                 <Image src={logo} />
                 <FormContainer onSubmit={SendData}>
-                    <InputField type="email" placeholder="Email" name="email"></InputField>
+                    <InputField type="text" placeholder="Email" name="email"></InputField>
                     <InputField type="password" placeholder="Password" name="password"></InputField>
                     <InputField type="password" placeholder="Repeat password" name="rpassword"></InputField>
                     <ButtonField type="submit" value="SIGN UP" />
@@ -52,7 +58,7 @@ export default function SignUp() {
                 </FormContainer>
                 <FooterContainer>
                     Have an accaunt?
-                    <LinkText to="/Auth"> SIGN IN</LinkText>
+                    <LinkText to="/signin"> SIGN IN</LinkText>
                 </FooterContainer>
             </AuthContainer>
         </Container>

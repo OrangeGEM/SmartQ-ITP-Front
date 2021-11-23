@@ -22,11 +22,18 @@ export default function SignIn() {
         }
 
         try {
+            if(form.password.length < 6)
+                throw new SyntaxError("Данные некорректны");
+
             console.log(form);
-            const data = await request('/api/auth/login', 'POST', { ...form })
+            const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/login`, 'POST', {...form})
             console.log(data.message);
-        } catch (e) {
-            console.log()
+        } catch(e) {
+            if(e.name == "SyntaxError") {
+                console.log("Данные некорректны");
+            } else {
+                console.log(e)
+            }
         }
 
     }
@@ -35,9 +42,9 @@ export default function SignIn() {
         <Container>
             <AuthContainer>
                 <Image src={logo} />
-                <FormContainer onSubmit={SendData}>
-                    <InputField type="email" name="email" placeholder="Email"></InputField>
-                    <InputField type="password" name="password" placeholder="Password"></InputField>
+                <FormContainer onSubmit={SendData} novalidate>
+                    <InputField type="email" name="email" placeholder="Email" novalidate></InputField>
+                    <InputField type="password" name="password" placeholder="Password" novalidate></InputField>
                     <ButtonField type="submit" value="SIGN IN" />
                     <LinkText to="/forgot"> FORGOT PASSWORD? </LinkText>
                 </FormContainer>
