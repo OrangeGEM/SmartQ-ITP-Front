@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 
-
-import Footer from './Footer/Footer';
 import Header from './Header/Header';
+import Main from './Main/Main';
+import Footer from './Footer/Footer';
+
 
 import styled from "styled-components";
 
@@ -12,13 +13,16 @@ const Conteiner = styled.div`
     height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center
+    align-items: center;
+    flex-direction: column;
 `;
 
 export default function LP() {
     return (
         <Conteiner>
-            <Link to="/signin">Auth</Link>
+            <Header />
+            <Main />
+            <Footer />
         </Conteiner>
     )
 }
