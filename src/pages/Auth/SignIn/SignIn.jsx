@@ -27,7 +27,7 @@ export default function SignIn() {
 
             console.log(form);
             const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/login`, 'POST', {...form})
-            console.log(data.message);
+            console.log(data);
         } catch(e) {
             if(e.name == "SyntaxError") {
                 console.log("Данные некорректны");
