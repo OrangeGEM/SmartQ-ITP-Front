@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const linkColor = '#FFA931';
 const stepColor = '#8D93AB';
@@ -151,4 +152,39 @@ export const StartNowContainer = styled.div`
 
     flex-direction: column;
 
+`;
+
+// Footer //
+
+export const FooterContainer = styled.div `
+    margin-top: 200px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+`;
+
+export const FooterComponent = styled.div `
+
+    display: flex;
+    justify-content: center;
+`;
+
+export const LinkText = styled(Link)`
+    color: ${linkColor};
+    text-decoration: none;
+    text-align: left;
+    align-self: flex-start;
+
+    font-family: Epilogue;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 15px;
+
+    margin-right: 50px;
+
+    font-family: DM Mono;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 15px;
 `;

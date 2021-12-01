@@ -1,10 +1,14 @@
 import React from "react";
+import { useNavigate } from 'react-router-dom';
 
 import img from "../../../images/img-topcont.png";
 import step1 from "../../../images/step-1.png"
 import step2 from "../../../images/step-2.png"
 import step3 from "../../../images/step-3.png"
 import step4 from "../../../images/step-4.png"
+
+
+
 import {
     ContentContainer,
     RightNowTextContainer,
@@ -24,11 +28,14 @@ import {
     StartNowContainer,
 } from "../styled";
 
-function testingClick() {
-    console.log("click");
-}
 
 export default function Main() {
+    const navigate = useNavigate();
+
+    function redirect() {
+        navigate('/signin')
+    }
+
     return (
         <ContentContainer>
             <TopContentContainer>
@@ -44,7 +51,7 @@ export default function Main() {
                     <MainButton
                         type="button"
                         value="GET STARTED"
-                        onClick={testingClick}
+                        onClick={redirect}
                     />
                 </TopTextConteiner>
 
@@ -109,7 +116,7 @@ export default function Main() {
                 <MainButton 
                         type="button"
                         value="GET STARTED"
-                        onClick={testingClick}
+                        onClick={redirect}
                 />
             </StartNowContainer>
             
