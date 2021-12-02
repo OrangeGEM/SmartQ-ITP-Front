@@ -19,6 +19,7 @@ const GlobalStyles = createGlobalStyle`
     font-style: normal;
     font-weight: 300;
     font-size: 14px;
+    background-color: #F1F3F8;
   }
 `;
 

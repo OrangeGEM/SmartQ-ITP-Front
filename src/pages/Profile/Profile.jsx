@@ -1,8 +1,12 @@
 import React from 'react';
-import Header from './Header/Header';
 
-import { Container, ContentContainer } from './styled'
+import Header from './Header/Header';
+import Queue from './Queue/Queue';
 import Top from './Top/Top';
+
+import { Container, ContentContainer, QueueContainer } from './styled'
+
+import data from './data.json';
 
 export default function Profile() {
 
@@ -11,7 +15,11 @@ export default function Profile() {
         <Container>
             <ContentContainer>
                 <Header />
-                <Top />
+                <Top data={data.length}/>
+
+                <QueueContainer>
+                    <Queue queue={data} />
+                </QueueContainer>
             </ContentContainer>
         </Container>
     );

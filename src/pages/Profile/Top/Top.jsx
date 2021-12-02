@@ -3,14 +3,14 @@ import React from 'react';
 import { TopContainer, Icon, ColumnContainer, RowContainer, TitleText, DescriptionText, ActionText } from '../styled';
 import add from '../../../images/profile/add.png';
 
-export default function Top() {
-
+export default function Top(props) {
+    const countQueue = props.data;
     
     return (
         <TopContainer>
             <ColumnContainer>
                 <TitleText> My queues </TitleText>
-                <DescriptionText> Total: Number </DescriptionText>
+                <DescriptionText> Total: {countQueue} </DescriptionText>
             </ColumnContainer>
             <RowContainer>
                 <ActionText> ADD NEW QUEUE </ActionText>

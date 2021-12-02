@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { HeaderContainer, Icon, Image, RowContainer, TitleText } from '../styled';
-import logo from '../../../images/profilelogo.png';
-import exit from '../../../images/profile/exit.png';
+import logo from '../../../images/profile/logo.svg';
+import exit from '../../../images/profile/exit.svg';
 
 export default function Header() {
 
