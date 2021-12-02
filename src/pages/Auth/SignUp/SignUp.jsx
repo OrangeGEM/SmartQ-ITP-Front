@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 
 
@@ -10,9 +10,12 @@ import google from '../../../images/Google.png';
 
 import { useHttp } from '../../../hooks/http.hook'
 
+import ErrorMessage from '../../../ErrorMessage/ErrorMessage';
+
 export default function SignUp() {
     const { request } = useHttp();
 
+    const [error, setError] = useState({})
 
     async function SendData(e) {
         e.preventDefault()
@@ -30,7 +33,13 @@ export default function SignUp() {
             console.log(form);
             const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/register`, 'POST', {...form})
             console.log(data);
+
+            setError({});
         } catch(e) {
+            setError([{
+                httpError : 'HTTP Error',
+                httpMessage: e.message
+            }])
             if(e.name == "SyntaxError") {
                 console.log("Данные некорректны");
             } else {
@@ -45,6 +54,7 @@ export default function SignUp() {
     return (
         <Container>
             <AuthContainer>
+                <ErrorMessage error={error}/>
                 <Image src={logo} />
                 <FormContainer onSubmit={SendData}>
                     <InputField type="text" placeholder="Email" name="email"></InputField>
