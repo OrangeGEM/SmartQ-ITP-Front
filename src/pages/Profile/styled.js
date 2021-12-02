@@ -25,6 +25,25 @@ export const TitleText = styled.div`
 
 `;
 
+export const DescriptionText = styled.div`
+    font-family: DM Mono;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 155.8%;
+`;
+
+export const ActionText = styled.div`
+    font-family: Futura PT;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 23px;
+    text-align: right;
+    letter-spacing: 0.08em;
+    color: #F59E6A;
+`;
+
 export const RowContainer = styled.div`
     display: flex;
     flex-direction: row;
@@ -57,6 +76,12 @@ export const HeaderContainer = styled.div`
     margin-bottom: 30px;
 `;
 
+// TOP //
+
+export const TopContainer = styled(HeaderContainer)`
+    margin-top: 0px;
+    margin-bottom: 0px;
+`;
 
 
 
