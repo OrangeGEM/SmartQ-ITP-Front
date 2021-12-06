@@ -27,7 +27,6 @@ export default function Queue({queues, setQueues, members, setMembers}) {
     }
 
     function handleDelete(obj, id) {
-        debugger;
         const newObj = obj.filter( (item) => { return item.id !== id } )
         setMembers(newObj);
         console.log('handle:', members)
