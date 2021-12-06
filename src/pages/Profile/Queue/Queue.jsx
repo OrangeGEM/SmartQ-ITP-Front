@@ -65,15 +65,13 @@ export default function Queue(props) {
                     selected ? selected.map( (obj, i) => {
                         return (
                             <RightItem style={i % 2 ? {"background":"#F1F3F8"}:{"background":"#E6EBF5"}}>
-                                <DescriptionText> {obj.id} </DescriptionText>
+                                <DescriptionText style={{"marginLeft":"30px"}}> {obj.id} </DescriptionText>
                                 <DescriptionText> {obj.ticket} </DescriptionText>
                                 <DescriptionText> {obj.phone} </DescriptionText>
-
                                 <RowContainer>
                                     <DescriptionText> {obj.time} </DescriptionText>
-                                    <ItemIcon src={deleteI} style={{"marginLeft":"20px"}} />
+                                    <ItemIcon src={deleteI} style={{"marginLeft":"20px", "paddingRight":"20px"}} />
                                 </RowContainer>
-                                
                             </RightItem>
                         )
                     }) : <div> Nothing </div>

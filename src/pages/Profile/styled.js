@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from "react-router-dom";
 
 export const Container = styled.div`
     width: 100%;
@@ -48,6 +49,7 @@ export const ActionText = styled.div`
     text-align: right;
     letter-spacing: 0.08em;
     color: #F59E6A;
+    cursor: pointer;
 `;
 
 export const ItemKeyText = styled.div`
@@ -56,6 +58,24 @@ export const ItemKeyText = styled.div`
     font-weight: 300;
     font-size: 15px;
     line-height: 155.8%;
+`;
+
+export const DescriptionInputText = styled.div`
+    font-family: Futura PT;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 15px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8D93AB;
+`;
+
+export const LinkText = styled(Link)`
+    color: #FFA931;
+    text-decoration: none;
+    text-align: left;
+    align-self: flex-start;
 `;
 
 export const ItemDescriptionText = styled.div`
@@ -146,6 +166,63 @@ export const RightItem = styled(RowContainer)`
 `;
 
 
+// MODAL // 
 
+export const ModalContainer = styled.div`
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
 
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
+    background-color: rgba(57, 59, 68, 0.8);
+`;
+
+export const ModalContent = styled.form`
+    width: 330px;
+    height: 430px;
+    background-color: #F1F3F8;
+    
+    padding: 30px 15px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+
+`;
+
+export const ModalInputField = styled.input`
+    max-width: 100%;
+    min-height: 70%;
+    background: #D6E0F0;
+
+    border: 0;
+    padding: 0 11px;
+    margin-top: 5px;
+`;
+
+export const ModalTextArea = styled.textarea`
+    max-width: 100%;
+    min-height: 85%;
+    background: #D6E0F0;
+
+    border: 0;
+    padding: 11px 11px;
+    margin-top: 5px;
+
+    resize: none;
+`;
+
+export const ModalInputBlock = styled(ColumnContainer) `
+    max-width: 100%;
+    height:24%;
+    margin-bottom: 15px;
+    
+`;      
+
+export const ModalInputContainer = styled(ColumnContainer)`
+    width: 100%;
+    min-height: 70%;
+`;
