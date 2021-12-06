@@ -7,21 +7,19 @@ import key from '../../../images/profile/key.svg';
 import arrow from '../../../images/profile/arrow.svg';
 import deleteI from '../../../images/profile/delete.svg';
 
-export default function Queue(props) {
-    const data = props.queue;
-    console.log(data);
-    const [queue, setQueue] = useState(data);
+export default function Queue({queues, setQueues}) {
     const [selected, setSelected] = useState();
 
     function handleSelect(i) {
-        if(!queue[i].wrap) {
-            let tempQueue = [...queue];
+        if(!queues[i].wrap) {
+            let tempQueue = [...queues];
             for(let i = 0; i < tempQueue.length; i++) {
                 tempQueue[i].wrap = false;
             }
             tempQueue[i].wrap = true;
+
             setSelected(tempQueue[i].units);
-            setQueue(tempQueue);
+            setQueues(tempQueue);
         } else {
             console.log('already open')
         }
@@ -31,7 +29,7 @@ export default function Queue(props) {
         <>
             <LeftContainer>
                 {   
-                    queue ? queue.map((obj, i) => {
+                    queues ? queues.map((obj, i) => {
                         return(obj.wrap ? (
                             <LeftItem  onClick={()=>{handleSelect(i)}}>
                                 <ItemDescription>

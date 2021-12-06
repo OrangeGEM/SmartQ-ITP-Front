@@ -226,3 +226,18 @@ export const ModalInputContainer = styled(ColumnContainer)`
     width: 100%;
     min-height: 70%;
 `;
+
+export const ModalSubmitButtin = styled.input`
+    font-family: Futura PT;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 23px;
+    text-align: right;
+    letter-spacing: 0.08em;
+    color: #F59E6A;
+    cursor: pointer;
+
+    border: 0;
+    padding: 0;
+`;

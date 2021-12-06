@@ -5,7 +5,6 @@ import add from '../../../images/profile/add.png';
 
 export default function Top({data, modalActive, setModalActive}) {
 
-    console.log(modalActive)
     return (
         <TopContainer>
             <ColumnContainer>
@@ -14,7 +13,7 @@ export default function Top({data, modalActive, setModalActive}) {
             </ColumnContainer>
             <RowContainer>
                 <ActionText onClick={ () => setModalActive(true) }> ADD NEW QUEUE </ActionText>
-                <Icon src={add} style={{'width':'20px', 'height':'20px', 'margin-left':'15px', "cursor":"pointer"}} onClick={ () => setModalActive(true) }/>
+                <Icon src={add} style={{'width':'20px', 'height':'20px', 'marginLeft':'15px', "cursor":"pointer"}} onClick={ () => setModalActive(true) }/>
             </RowContainer>
         </TopContainer>
     );

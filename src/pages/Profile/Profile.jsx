@@ -11,18 +11,18 @@ import data from './data.json';
 
 export default function Profile() {
     const [modalActive, setModalActive] = useState(false);
-    const [queues, setData] = useState(data)
+    const [queues, setQueues] = useState(data)
 
 
     return (
         <Container>
-            <Modal active={modalActive} setActive={setModalActive} />
+            <Modal active={modalActive} setActive={setModalActive} queues={queues} setQueues={setQueues}/>
             <ContentContainer>
                 <Header />
                 <Top data={queues} modalActive={modalActive} setModalActive={setModalActive} />
 
                 <QueueContainer>
-                    <Queue queue={queues} />
+                    <Queue queues={queues} setQueues={setQueues} />
                 </QueueContainer>
             </ContentContainer>
         </Container>
