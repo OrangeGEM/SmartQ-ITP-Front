@@ -8,8 +8,8 @@ import arrow from '../../../images/profile/arrow.svg';
 import deleteI from '../../../images/profile/delete.svg';
 
 export default function Queue({queues, setQueues, members, setMembers}) {
-    
-    console.log('function:',members)
+    const [currentMember, setCurrentMember] = useState(null)
+    console.log('function:', members)
 
 
     function handleSelect(i) {
@@ -29,8 +29,38 @@ export default function Queue({queues, setQueues, members, setMembers}) {
     function handleDelete(obj, i) {
         obj.splice(i, 1);
         setMembers([...obj]);
-        console.log('handle:',members)
+        console.log('handle:', members)
     }
+    
+    // DRAG //
+    function DragOverHandler(e) {
+        e.preventDefault();
+    }
+
+    function DragLeaveHandler(e) {
+
+    }
+
+    function DragStartHandler(e, obj) {
+        setCurrentMember(obj)
+    }
+
+    function DragEndHandler(e) {
+
+    }
+
+    function DropHandler(e, obj) {
+        e.preventDefault();
+        const currentIndex = members.indexOf(currentMember);
+        members.splice(currentIndex, 1);
+        const dropIndex = members.indexOf(obj)
+        console.log(dropIndex);
+        members.splice(dropIndex, 0, currentMember);
+        setMembers( members.map( i => {
+            return i;
+        }));
+    }
+
 
     return (
         <>
@@ -69,7 +99,17 @@ export default function Queue({queues, setQueues, members, setMembers}) {
                 {
                     members ? members.map( (obj, i) => {
                         return (
-                            <RightItem style={i % 2 ? {"background":"#F1F3F8"}:{"background":"#E6EBF5"}}>
+                            <RightItem 
+                                style={i % 2 ? {"background":"#F1F3F8"}:{"background":"#E6EBF5"}} 
+                                draggable="true"
+                                onDragOver={ (e)=> { DragOverHandler(e) } }
+                                onDragLeave={ (e)=> { DragLeaveHandler(e) } }
+                                onDragStart={ (e)=> { DragStartHandler(e, obj) } }
+                                onDragEnd={ (e)=> { DragEndHandler(e) } }
+                                onDrop={ (e)=> { DropHandler(e, obj) } }
+                                name="rightItem"
+
+                            >
                                 <DescriptionText style={{"marginLeft":"30px"}}> {obj.id} </DescriptionText>
                                 <DescriptionText> {obj.ticket} </DescriptionText>
                                 <DescriptionText> {obj.phone} </DescriptionText>
