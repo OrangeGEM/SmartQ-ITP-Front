@@ -26,9 +26,10 @@ export default function Queue({queues, setQueues, members, setMembers}) {
         }
     }
 
-    function handleDelete(obj, i) {
-        obj.splice(i, 1);
-        setMembers([...obj]);
+    function handleDelete(obj, id) {
+        debugger;
+        const newObj = obj.filter( (item) => { return item.id !== id } )
+        setMembers(newObj);
         console.log('handle:', members)
     }
     
@@ -80,7 +81,7 @@ export default function Queue({queues, setQueues, members, setMembers}) {
                                 <CountDescription>                                        
                                     <RowContainer style={{"justifyContent":"end", "marginBottom":"15px"}}>
                                         <ItemIcon src={group} />
-                                        <TitleText style={{"margin":"0"}}> {obj.units.length} </TitleText>
+                                        <TitleText style={{"margin":"0"}}> {members.length} </TitleText>
                                     </RowContainer>
                                     <ItemDescriptionText> {obj.time} </ItemDescriptionText>
                                 </CountDescription>
@@ -115,7 +116,7 @@ export default function Queue({queues, setQueues, members, setMembers}) {
                                 <DescriptionText> {obj.phone} </DescriptionText>
                                 <RowContainer>
                                     <DescriptionText> {obj.time} </DescriptionText>
-                                    <ItemIcon src={deleteI} style={{"marginLeft":"20px", "paddingRight":"20px"}} onClick={ () => { handleDelete(members, i) } }/>
+                                    <ItemIcon src={deleteI} style={{"marginLeft":"20px", "paddingRight":"20px"}} onClick={ () => { handleDelete(members, obj.id) } }/>
                                 </RowContainer>
                             </RightItem>
                         )

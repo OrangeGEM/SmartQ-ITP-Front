@@ -12,8 +12,8 @@ import data from './data.json';
 export default function Profile() {
     const [modalActive, setModalActive] = useState(false);
     const [queues, setQueues] = useState(data)
-    const [members, setMembers] = useState()
-
+    const [members, setMembers] = useState([])
+    console.log(members);
 
     return (
         <Container>
