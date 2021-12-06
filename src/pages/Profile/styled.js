@@ -227,7 +227,7 @@ export const ModalInputContainer = styled(ColumnContainer)`
     min-height: 70%;
 `;
 
-export const ModalSubmitButtin = styled.input`
+export const ModalSubmitButton = styled.input`
     font-family: Futura PT;
     font-style: normal;
     font-weight: 600;

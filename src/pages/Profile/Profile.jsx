@@ -12,6 +12,7 @@ import data from './data.json';
 export default function Profile() {
     const [modalActive, setModalActive] = useState(false);
     const [queues, setQueues] = useState(data)
+    const [members, setMembers] = useState()
 
 
     return (
@@ -22,7 +23,7 @@ export default function Profile() {
                 <Top data={queues} modalActive={modalActive} setModalActive={setModalActive} />
 
                 <QueueContainer>
-                    <Queue queues={queues} setQueues={setQueues} />
+                    <Queue queues={queues} setQueues={setQueues} members={members} setMembers={setMembers} />
                 </QueueContainer>
             </ContentContainer>
         </Container>

@@ -7,8 +7,10 @@ import key from '../../../images/profile/key.svg';
 import arrow from '../../../images/profile/arrow.svg';
 import deleteI from '../../../images/profile/delete.svg';
 
-export default function Queue({queues, setQueues}) {
-    const [selected, setSelected] = useState();
+export default function Queue({queues, setQueues, members, setMembers}) {
+    
+    console.log('function:',members)
+
 
     function handleSelect(i) {
         if(!queues[i].wrap) {
@@ -17,12 +19,17 @@ export default function Queue({queues, setQueues}) {
                 tempQueue[i].wrap = false;
             }
             tempQueue[i].wrap = true;
-
-            setSelected(tempQueue[i].units);
+            setMembers(tempQueue[i].units);
             setQueues(tempQueue);
         } else {
             console.log('already open')
         }
+    }
+
+    function handleDelete(obj, i) {
+        obj.splice(i, 1);
+        setMembers([...obj]);
+        console.log('handle:',members)
     }
 
     return (
@@ -54,13 +61,13 @@ export default function Queue({queues, setQueues}) {
                                 <ItemIcon src={arrow}/>
                             </LeftItem>
                         ))
-                    }) : <div> Nothing </div>
+                    }) : <></>
                 }
             </LeftContainer>
 
             <RightContainer>      
                 {
-                    selected ? selected.map( (obj, i) => {
+                    members ? members.map( (obj, i) => {
                         return (
                             <RightItem style={i % 2 ? {"background":"#F1F3F8"}:{"background":"#E6EBF5"}}>
                                 <DescriptionText style={{"marginLeft":"30px"}}> {obj.id} </DescriptionText>
@@ -68,11 +75,11 @@ export default function Queue({queues, setQueues}) {
                                 <DescriptionText> {obj.phone} </DescriptionText>
                                 <RowContainer>
                                     <DescriptionText> {obj.time} </DescriptionText>
-                                    <ItemIcon src={deleteI} style={{"marginLeft":"20px", "paddingRight":"20px"}} />
+                                    <ItemIcon src={deleteI} style={{"marginLeft":"20px", "paddingRight":"20px"}} onClick={ () => { handleDelete(members, i) } }/>
                                 </RowContainer>
                             </RightItem>
                         )
-                    }) : <div> Nothing </div>
+                    }) : <></>
                 }
             </RightContainer>
         </>

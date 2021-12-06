@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { LinkText } from '../../Auth/styled';
-import { useDate } from '../../../hooks/client.date';
+import { useDate } from '../../../hooks/date.hook';
 
-import { ModalSubmitButtin, ModalInputContainer, ModalInputBlock, DescriptionInputText, ModalContainer, ModalContent, ModalInputField, TitleText, ModalTextArea, RowContainer, ActionText, ColumnContainer } from '../styled'
+import { ModalSubmitButton, ModalInputContainer, ModalInputBlock, DescriptionInputText, ModalContainer, ModalContent, ModalInputField, TitleText, ModalTextArea, RowContainer, ActionText, ColumnContainer } from '../styled'
 
 
 export default function Modal({active, setActive, queues, setQueues}) {
@@ -59,7 +59,7 @@ export default function Modal({active, setActive, queues, setQueues}) {
                     </ModalInputContainer>
 
                     <RowContainer style={{"justifyContent":"space-between"}}>
-                        <ModalSubmitButtin type="submit" value="CREATE"/>
+                        <ModalSubmitButton type="submit" value="CREATE"/>
                         <ActionText style={{"color":"#393B44"}} onClick={ () => setActive(false) }> CLOSE </ActionText>
                     </RowContainer>
                 </ModalContent>
