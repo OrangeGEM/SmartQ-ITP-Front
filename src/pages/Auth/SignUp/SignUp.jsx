@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import ReCAPTCHA from "react-google-recaptcha";
 
 import { Container, AuthContainer, Image, FormContainer, InputField, ButtonField, LinkText, FooterContainer, FooterForm } from '../styled';
 

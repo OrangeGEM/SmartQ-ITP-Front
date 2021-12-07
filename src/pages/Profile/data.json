@@ -1,5 +1,6 @@
 [
     {
+        "id" : "1",
         "title": "Queue long long long name #1",
         "key": "BREWER",
         "desc": "The description of the queue",
@@ -10,6 +11,7 @@
         ]
     },
     {
+        "id" : "2",
         "title": "Queue long long long name #2",
         "key": "BREWER",
         "desc": "The description of the queue",
