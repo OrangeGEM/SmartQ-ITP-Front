@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createBrowserHistory } from 'history';
 
 import Header from './Header/Header';
 import Queue from './Queue/Queue';
@@ -15,21 +16,35 @@ export default function Profile() {
     const [queues, setQueues] = useState(data)
     const [members, setMembers] = useState([])
     const { request } = useHttp();
+    let history = createBrowserHistory();
+    console.log(history)
     console.log(members);
 
     useEffect(() => {
         async function verifyUser() {
-            const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/verify`, 'POST');
-            console.log(data);
-            if(data?.done) {
-                await getQueues();
+            try {
+                const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/verify`, 'POST');
+                console.log(data);
+                if(data?.done) {
+                    await getQueues();
+                }
+            } catch(e) {
+                // history.push("/signin")
+                // document.location.reload(); <- need to fix
+                console.log(e.message);
             }
+            
         }
         verifyUser();
 
         async function getQueues() {
-            const data = await request(`${process.env.REACT_APP_API_URL}/api/profile/getqueue`, 'POST');
-            console.log(data);
+            try {
+                const data = await request(`${process.env.REACT_APP_API_URL}/api/profile/getqueue`, 'POST');
+                console.log(data);
+            } catch(e) {
+                console.log(e.message);
+            }
+            
         }
         
     }, [])
