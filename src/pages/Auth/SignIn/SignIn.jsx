@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 
+import { createBrowserHistory } from 'history';
 
 import { Container, AuthContainer, Image, FormContainer, InputField, ButtonField, LinkText, FooterContainer } from '../styled';
 import logo from '../../../images/Auth-logo.png';
@@ -10,6 +11,7 @@ import { useHttp } from '../../../hooks/http.hook'
 
 export default function SignIn() {
     const { request } = useHttp();
+    let history = createBrowserHistory();
 
 
     async function SendData(e) {
@@ -28,6 +30,11 @@ export default function SignIn() {
             console.log(form);
             const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/login`, 'POST', {...form})
             console.log(data);
+            if( data.accessToken && data.refreshToken ) {
+                console.log("redirect to profile")
+                history.push('/profile')
+            }
+
         } catch(e) {
             if(e.name == "SyntaxError") {
                 console.log("Данные некорректны");
