@@ -21,6 +21,15 @@ export default function Profile() {
         async function verifyUser() {
             const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/verify`, 'POST');
             console.log(data);
+            if(data?.done) {
+                await getQueues();
+            }
+        }
+        verifyUser();
+
+        async function getQueues() {
+            const data = await request(`${process.env.REACT_APP_API_URL}/api/profile/getqueue`, 'POST');
+            console.log(data);
         }
         
     }, [])
