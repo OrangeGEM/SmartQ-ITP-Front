@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Link } from "react-router-dom";
+import DateTimePicker from 'react-datetime-picker';
 
 export const Container = styled.div`
     width: 100%;
@@ -126,11 +127,11 @@ export const TopContainer = styled(HeaderContainer)`
 
 export const LeftContainer = styled(ColumnContainer)`
     width: 30%;
-
 `;
 
 export const LeftItem = styled(RowContainer)`
     width: 100%;
+    max-height: 35%;
     background-color: #D6E0F0;
     margin-bottom: 15px;
     padding: 25px 15px 25px 15px;
@@ -241,3 +242,8 @@ export const ModalSubmitButton = styled.input`
     border: 0;
     padding: 0;
 `;
+
+export const Calendar = styled(DateTimePicker)`
+    max-width: 100%;
+    min-height: 70%;
+`

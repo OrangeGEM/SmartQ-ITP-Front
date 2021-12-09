@@ -9,23 +9,25 @@ import Modal from './Modal/Modal';
 import { Container, ContentContainer, QueueContainer } from './styled'
 import { useHttp } from '../../hooks/http.hook'
 
-import data from './data.json';
 
 export default function Profile() {
     const [modalActive, setModalActive] = useState(false);
-    const [queues, setQueues] = useState(data)
+    const [modalActiveMember, setModalActiveMember] = useState(false);
+    const [options, setOptions] = useState({});
+    const [queues, setQueues] = useState([])
     const [members, setMembers] = useState([])
+    const [email, setEmail] = useState('');
     const { request } = useHttp();
-    let history = createBrowserHistory();
-    console.log(history)
-    console.log(members);
+
+    let history = createBrowserHistory(); //????
 
     useEffect(() => {
         async function verifyUser() {
             try {
                 const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/verify`, 'POST');
                 console.log(data);
-                if(data?.done) {
+                if(data?.email) {
+                    setEmail(data.email);
                     await getQueues();
                 }
             } catch(e) {
@@ -40,7 +42,7 @@ export default function Profile() {
         async function getQueues() {
             try {
                 const data = await request(`${process.env.REACT_APP_API_URL}/api/profile/getqueue`, 'POST');
-                console.log(data);
+                setQueues(data);
             } catch(e) {
                 console.log(e.message);
             }
@@ -51,13 +53,28 @@ export default function Profile() {
 
     return (
         <Container>
-            <Modal active={modalActive} setActive={setModalActive} queues={queues} setQueues={setQueues}/>
+            <Modal 
+                active={modalActive} 
+                setActive={setModalActive} 
+                queues={queues} 
+                setQueues={setQueues}
+                options={options} 
+                setOptions={setOptions} 
+                activeMember={modalActiveMember} 
+                setActiveMember={setModalActiveMember}/>
             <ContentContainer>
-                <Header />
+                <Header email={email}/>
                 <Top data={queues} modalActive={modalActive} setModalActive={setModalActive} />
 
                 <QueueContainer>
-                    <Queue queues={queues} setQueues={setQueues} members={members} setMembers={setMembers} />
+                    <Queue 
+                        queues={queues} 
+                        setQueues={setQueues} 
+                        members={members} 
+                        setMembers={setMembers} 
+                        setOptions={setOptions} 
+                        setModalActive={setModalActive} 
+                        setActiveMember={setModalActiveMember} />
                 </QueueContainer>
             </ContentContainer>
         </Container>

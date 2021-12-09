@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 
-import { LeftContainer, RightContainer, LeftItem, ItemDescription, CountDescription, TitleText, ItemKeyText, ItemDescriptionText, Icon, ItemIcon, RowContainer, RightItem, DescriptionText } from '../styled';
+import { ActionText, LeftContainer, RightContainer, LeftItem, ItemDescription, CountDescription, TitleText, ItemKeyText, ItemDescriptionText, Icon, ItemIcon, RowContainer, RightItem, DescriptionText, ModalContent, ModalContainer } from '../styled';
+import { useHttp } from '../../../hooks/http.hook'
 
 import group from '../../../images/profile/group.svg';
 import key from '../../../images/profile/key.svg';
 import arrow from '../../../images/profile/arrow.svg';
 import deleteI from '../../../images/profile/delete.svg';
+import queueSettings from '../../../images/profile/queueSettings.svg'
+import add from '../../../images/profile/add.png';
 
-export default function Queue({queues, setQueues, members, setMembers}) {
+export default function Queue({queues, setQueues, members, setMembers, setOptions, setModalActive, setActiveMember}) {
     const [currentMember, setCurrentMember] = useState(null)
-    console.log('function:', members)
-
+    const { request } = useHttp();
 
     function handleSelect(i) {
         if(!queues[i].wrap) {
@@ -21,32 +23,45 @@ export default function Queue({queues, setQueues, members, setMembers}) {
             tempQueue[i].wrap = true;
             setMembers(tempQueue[i].units);
             setQueues(tempQueue);
-        } else {
-            console.log('already open')
         }
     }
 
-    function handleDelete(obj, id) {
-        const newObj = obj.filter( (item) => { return item.id !== id } )
-        setMembers(newObj);
-        console.log('handle:', members)
+    async function handleDelete(obj, id) {
+        try {
+            const queueId = queues.filter( (item) => { return item.wrap == true } )[0]._id;
+            const newObj = obj.filter( (item) => { return item.id !== id } )
+
+            const data =  await request(`${process.env.REACT_APP_API_URL}/api/profile/updatemembers`, 'POST', { id: queueId, units: newObj });
+            console.log( data )
+
+            setMembers(newObj);
+        } catch(e) {
+
+        }
     }
     
-    // DRAG //
+ 
+    async function editQueue(queue, i) {
+        console.log(queue, i)
+        setOptions({
+            title : queue.title,
+            key: queue.key,
+            desc: queue.desc,
+            _id: queue._id,
+            modalTitle: 'Edit queue', 
+            submitButtonValue: 'DELETE',
+            middleButtonValue: 'EDIT'
+        });
+        setModalActive(true);
+    }
+
+       // DRAG&DROP //
     function DragOverHandler(e) {
         e.preventDefault();
     }
 
-    function DragLeaveHandler(e) {
-
-    }
-
     function DragStartHandler(e, obj) {
         setCurrentMember(obj)
-    }
-
-    function DragEndHandler(e) {
-
     }
 
     function DropHandler(e, obj) {
@@ -60,8 +75,7 @@ export default function Queue({queues, setQueues, members, setMembers}) {
             return i;
         }));
     }
-
-
+    //console.log(queues)
     return (
         <>
             <LeftContainer>
@@ -77,7 +91,9 @@ export default function Queue({queues, setQueues, members, setMembers}) {
                                     </RowContainer>
                                     <ItemDescriptionText> {obj.desc} </ItemDescriptionText>
                                 </ItemDescription>
-                                <CountDescription>                                        
+
+                                <CountDescription>    
+                                    <Icon src={queueSettings} style={{width:"20px", height: "20px", "marginBottom":"20px"}} onClick={ () => editQueue(obj, i) }/>
                                     <RowContainer style={{"justifyContent":"end", "marginBottom":"15px"}}>
                                         <ItemIcon src={group} />
                                         <TitleText style={{"margin":"0"}}> {members.length} </TitleText>
@@ -103,13 +119,10 @@ export default function Queue({queues, setQueues, members, setMembers}) {
                                 style={i % 2 ? {"background":"#F1F3F8"}:{"background":"#E6EBF5"}} 
                                 draggable="true"
                                 onDragOver={ (e)=> { DragOverHandler(e) } }
-                                onDragLeave={ (e)=> { DragLeaveHandler(e) } }
                                 onDragStart={ (e)=> { DragStartHandler(e, obj) } }
-                                onDragEnd={ (e)=> { DragEndHandler(e) } }
                                 onDrop={ (e)=> { DropHandler(e, obj) } }
-                                name="rightItem"
+                                name="rightItem">
 
-                            >
                                 <DescriptionText style={{"marginLeft":"30px"}}> {obj.id} </DescriptionText>
                                 <DescriptionText> {obj.ticket} </DescriptionText>
                                 <DescriptionText> {obj.phone} </DescriptionText>
@@ -121,6 +134,15 @@ export default function Queue({queues, setQueues, members, setMembers}) {
                         )
                     }) : <></>
                 }
+                {
+                    queues.find((item) => { return item.wrap === true }) ? (
+                        <RowContainer style={{"justifyContent":"flex-end"}}>
+                            <ActionText onClick={() => { setActiveMember(true) }}> ADD NEW MEMBER </ActionText>
+                            <Icon src={add} style={{'width':'20px', 'height':'20px', 'marginLeft':'15px', "cursor":"pointer"}} onClick={() => { setActiveMember(true) }}/>
+                        </RowContainer>
+                    ) : <></>
+                }
+
             </RightContainer>
         </>
     );
