@@ -246,4 +246,5 @@ export const ModalSubmitButton = styled.input`
 export const Calendar = styled(DateTimePicker)`
     max-width: 100%;
     min-height: 70%;
+    color: #8D93AB;
 `

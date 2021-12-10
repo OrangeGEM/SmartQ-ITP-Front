@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { ActionText, LeftContainer, RightContainer, LeftItem, ItemDescription, CountDescription, TitleText, ItemKeyText, ItemDescriptionText, Icon, ItemIcon, RowContainer, RightItem, DescriptionText, ModalContent, ModalContainer } from '../styled';
 import { useHttp } from '../../../hooks/http.hook'
@@ -7,10 +7,10 @@ import group from '../../../images/profile/group.svg';
 import key from '../../../images/profile/key.svg';
 import arrow from '../../../images/profile/arrow.svg';
 import deleteI from '../../../images/profile/delete.svg';
-import queueSettings from '../../../images/profile/queueSettings.svg'
+import settings from '../../../images/profile/queueSettings.svg'
 import add from '../../../images/profile/add.png';
 
-export default function Queue({queues, setQueues, members, setMembers, setOptions, setModalActive, setActiveMember}) {
+export default function Queue({setActiveId, queues, setQueues, members, setMembers, setOptions, setModalActive, setActiveMember}) {
     const [currentMember, setCurrentMember] = useState(null)
     const { request } = useHttp();
 
@@ -21,6 +21,7 @@ export default function Queue({queues, setQueues, members, setMembers, setOption
                 tempQueue[i].wrap = false;
             }
             tempQueue[i].wrap = true;
+            setActiveId(tempQueue[i]);
             setMembers(tempQueue[i].units);
             setQueues(tempQueue);
         }
@@ -75,7 +76,7 @@ export default function Queue({queues, setQueues, members, setMembers, setOption
             return i;
         }));
     }
-    //console.log(queues)
+    
     return (
         <>
             <LeftContainer>
@@ -93,7 +94,7 @@ export default function Queue({queues, setQueues, members, setMembers, setOption
                                 </ItemDescription>
 
                                 <CountDescription>    
-                                    <Icon src={queueSettings} style={{width:"20px", height: "20px", "marginBottom":"20px"}} onClick={ () => editQueue(obj, i) }/>
+                                    <Icon src={settings} style={{width:"20px", height: "20px", "marginBottom":"20px"}} onClick={ () => editQueue(obj, i) }/>
                                     <RowContainer style={{"justifyContent":"end", "marginBottom":"15px"}}>
                                         <ItemIcon src={group} />
                                         <TitleText style={{"margin":"0"}}> {members.length} </TitleText>
@@ -129,6 +130,7 @@ export default function Queue({queues, setQueues, members, setMembers, setOption
                                 <RowContainer>
                                     <DescriptionText> {obj.time} </DescriptionText>
                                     <ItemIcon src={deleteI} style={{"marginLeft":"20px", "paddingRight":"20px"}} onClick={ () => { handleDelete(members, obj.id) } }/>
+                                    <ItemIcon src={settings} style={{"marginLeft":"20px", "paddingRight":"20px"}} onClick={ () => { handleDelete(members, obj.id) } }/>
                                 </RowContainer>
                             </RightItem>
                         )

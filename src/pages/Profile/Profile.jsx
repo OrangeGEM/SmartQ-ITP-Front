@@ -17,6 +17,7 @@ export default function Profile() {
     const [queues, setQueues] = useState([])
     const [members, setMembers] = useState([])
     const [email, setEmail] = useState('');
+    const [activeId, setActiveId] = useState();
     const { request } = useHttp();
 
     let history = createBrowserHistory(); //????
@@ -61,13 +62,18 @@ export default function Profile() {
                 options={options} 
                 setOptions={setOptions} 
                 activeMember={modalActiveMember} 
-                setActiveMember={setModalActiveMember}/>
+                setActiveMember={setModalActiveMember}
+                activeId={activeId}
+                setMembers={setMembers}/>
+                
+                
             <ContentContainer>
                 <Header email={email}/>
                 <Top data={queues} modalActive={modalActive} setModalActive={setModalActive} />
 
                 <QueueContainer>
                     <Queue 
+                        setActiveId={setActiveId}
                         queues={queues} 
                         setQueues={setQueues} 
                         members={members} 
