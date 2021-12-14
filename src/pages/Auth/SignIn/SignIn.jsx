@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 
-import ErrorMessage from '../../../ErrorMessage/ErrorMessage';
+import { createBrowserHistory } from 'history';
 
 import { Container, AuthContainer, Image, FormContainer, InputField, ButtonField, LinkText, FooterContainer } from '../styled';
 import logo from '../../../images/Auth-logo.png';
@@ -11,6 +11,7 @@ import { useHttp } from '../../../hooks/http.hook'
 
 export default function SignIn() {
     const { request } = useHttp();
+    let history = createBrowserHistory();
 
     const [error, setError] = useState({})
     
@@ -31,7 +32,11 @@ export default function SignIn() {
             const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/login`, 'POST', {...form})
             console.log(data);
 
-            setError({});
+            if( data.accessToken && data.refreshToken ) {
+                console.log("redirect to profile")
+                history.push('/profile')
+            }
+
         } catch(e) {
             setError([{
                 httpError : 'HTTP Error',
