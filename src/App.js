@@ -1,11 +1,10 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   BrowserRouter,
   Routes,
   Route
 } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
-
 import LP from './pages/LP/LP.jsx';
 import SignIn from './pages/Auth/SignIn/SignIn.jsx'
 import SignUp from './pages/Auth/SignUp/SignUp.jsx'
