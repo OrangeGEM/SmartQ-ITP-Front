@@ -1,11 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   BrowserRouter,
   Routes,
   Route
 } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
-
+import { io } from 'socket.io-client';
 import LP from './pages/LP/LP.jsx';
 import SignIn from './pages/Auth/SignIn/SignIn.jsx'
 import SignUp from './pages/Auth/SignUp/SignUp.jsx'
@@ -22,6 +22,13 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 export default function App() {
+  useEffect(() => {
+    const socket = io('http://localhost:5001', {
+      withCredentials: true
+    })
+  }, [])
+
+
   return (
     <BrowserRouter>
       <GlobalStyles />
