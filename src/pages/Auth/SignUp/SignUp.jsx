@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 import { createBrowserHistory } from 'history';
 
+
 import { Container, AuthContainer, Image, FormContainer, InputField, ButtonField, LinkText, FooterContainer, FooterForm } from '../styled';
 
 import logo from '../../../images/Auth-logo.png';
