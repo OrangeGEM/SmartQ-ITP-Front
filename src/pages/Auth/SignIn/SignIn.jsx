@@ -1,4 +1,6 @@
-import React, { useContext } from 'react';
+
+import React, { useState, useContext } from 'react';
+
 import { Link } from "react-router-dom";
 
 import { createBrowserHistory } from 'history';
@@ -7,13 +9,19 @@ import { Container, AuthContainer, Image, FormContainer, InputField, ButtonField
 import logo from '../../../images/Auth-logo.png';
 
 import { useHttp } from '../../../hooks/http.hook'
-import { AuthContext } from '../../../context/auth.context'
 
+import { AuthContext } from '../../../context/auth.context'
+import { ErrorContext } from '../../../context/error.context';
+
+
+import ErrorMessage from '../../../ErrorMessage/ErrorMessage.jsx'
 
 export default function SignIn() {
     const { request } = useHttp();
+
     const auth = useContext(AuthContext);
     let history = createBrowserHistory();
+    const { setError } = useContext(ErrorContext);
 
     console.log('Auth context: ', auth)
 
@@ -32,6 +40,7 @@ export default function SignIn() {
 
             console.log('data send: ', form);
             const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/login`, 'POST', {...form})
+
             console.log('data recevied: ', data);
             if(data.accessToken && data.refreshToken) {
                 //console.log(data.userDto.id)
@@ -39,6 +48,7 @@ export default function SignIn() {
             }
 
         } catch(e) {
+            setError( 'HTTP Error', e.message)
             if(e.name == "SyntaxError") {
                 console.log("Данные некорректны");
             } else {
@@ -47,10 +57,11 @@ export default function SignIn() {
         }
 
     }
-
+    
     return (
         <Container>
             <AuthContainer>
+                <ErrorMessage />
                 <Image src={logo} />
                 <FormContainer onSubmit={SendData} novalidate>
                     <InputField type="email" name="email" placeholder="Email" novalidate></InputField>

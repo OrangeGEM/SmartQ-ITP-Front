@@ -1,12 +1,18 @@
+
 import React, { useEffect, useState, useContext } from 'react';
+
 import {
   BrowserRouter,
   Routes,
   Route
 } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
+
 import { AuthContext } from './context/auth.context.js';
 import { useAuth } from './hooks/auth.hook.js';
+import { ErrorContext } from './context/error.context';
+import { useError } from './hooks/error.hook.js';
+
 
 import LP from './pages/LP/LP.jsx';
 import SignIn from './pages/Auth/SignIn/SignIn.jsx'
@@ -25,13 +31,18 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 export default function App() {
+
   const {login, logout, userId} = useAuth()
   const isAuthenticated = !!userId
+  
+  const ErrorHandler = useContext(ErrorContext)
+  const { errorTitle, errorMessage, setError } = useError()
 
   //console.log(AuthContext)
   console.log(isAuthenticated)
   return (
     <AuthContext.Provider value={{ login, logout, userId }}>
+    <ErrorContext.Provider value={{errorTitle, errorMessage, setError}} >
     <BrowserRouter>
       <GlobalStyles />
       { isAuthenticated ?
@@ -51,6 +62,7 @@ export default function App() {
         </>
       }   
       </BrowserRouter>
+    </ErrorContext.Provider>
     </AuthContext.Provider>
   );
 }

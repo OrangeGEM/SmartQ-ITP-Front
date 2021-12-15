@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
+
 import { Link } from "react-router-dom";
 
 import { createBrowserHistory } from 'history';
@@ -10,14 +11,21 @@ import facebook from '../../../images/Facebook.png';
 import google from '../../../images/Google.png';
 
 import { useHttp } from '../../../hooks/http.hook'
+
 import { AuthContext } from '../../../context/auth.context'
 
+import { ErrorContext } from '../../../context/error.context';
+import ErrorMessage from '../../../ErrorMessage/ErrorMessage.jsx'
 
+import { createPortal } from 'react-dom';
 
 export default function SignUp() {
     const { request } = useHttp();
     const auth = useContext(AuthContext);
+    const { setError } = useContext(ErrorContext);
+
     let history = createBrowserHistory();
+
 
     async function SendData(e) {
         e.preventDefault()
@@ -35,12 +43,14 @@ export default function SignUp() {
             console.log(form);
             const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/register`, 'POST', {...form})
             console.log(data);
+          
             if(data.accessToken && data.refreshToken) {
                 auth.login(data.userDto.id)
                 console.log(auth);
             }
-
+          
         } catch(e) {
+            setError( 'HTTP Error', e.message)
             if(e.name == "SyntaxError") {
                 console.log("Данные некорректны");
             } else {
@@ -55,6 +65,7 @@ export default function SignUp() {
     return (
         <Container>
             <AuthContainer>
+                <ErrorMessage />
                 <Image src={logo} />
                 <FormContainer onSubmit={SendData}>
                     <InputField type="text" placeholder="Email" name="email"></InputField>
