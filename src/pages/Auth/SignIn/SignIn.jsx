@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from "react-router-dom";
 
 import { createBrowserHistory } from 'history';
@@ -7,13 +7,15 @@ import { Container, AuthContainer, Image, FormContainer, InputField, ButtonField
 import logo from '../../../images/Auth-logo.png';
 
 import { useHttp } from '../../../hooks/http.hook'
+import { ErrorContext } from '../../../context/error.context';
 
+import ErrorMessage from '../../../ErrorMessage/ErrorMessage.jsx'
 
 export default function SignIn() {
     const { request } = useHttp();
+    const { setError } = useContext(ErrorContext);
     let history = createBrowserHistory();
-
-
+    
     async function SendData(e) {
         e.preventDefault()
         const target = e.target;
@@ -30,12 +32,14 @@ export default function SignIn() {
             console.log(form);
             const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/login`, 'POST', {...form})
             console.log(data);
+
             if( data.accessToken && data.refreshToken ) {
                 console.log("redirect to profile")
                 history.push('/profile')
             }
 
         } catch(e) {
+            setError( 'HTTP Error', e.message)
             if(e.name == "SyntaxError") {
                 console.log("Данные некорректны");
             } else {
@@ -44,10 +48,11 @@ export default function SignIn() {
         }
 
     }
-
+    
     return (
         <Container>
             <AuthContainer>
+                <ErrorMessage />
                 <Image src={logo} />
                 <FormContainer onSubmit={SendData} novalidate>
                     <InputField type="email" name="email" placeholder="Email" novalidate></InputField>
