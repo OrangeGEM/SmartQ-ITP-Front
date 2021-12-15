@@ -20,9 +20,6 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 //TEMP
 
-const _env = require('dotenv').config()
-process.env.CI = false;
-
 ReactDOM.render(
   <React.StrictMode>
     <App />
