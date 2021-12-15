@@ -13,16 +13,23 @@ const Conteiner = styled.div`
     height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
+`;
+
+const ContentContainer = styled.div`
+    width: 90%;
+    height: 100vh;
+    display: flex;
     flex-direction: column;
 `;
 
 export default function LP() {
     return (
         <Conteiner>
-            <Header />
-            <Main />
-            <Footer />
+            <ContentContainer>
+                <Header />
+                <Main />
+                <Footer />
+            </ContentContainer>
         </Conteiner>
     )
 }
