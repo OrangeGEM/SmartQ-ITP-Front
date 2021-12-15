@@ -25,13 +25,13 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 export default function App() {
-  const {token, login, logout, userId} = useAuth()
-  const { user } = useContext(AuthContext)
-  const isAuthenticated = token
+  const {login, logout, userId} = useAuth()
+  const isAuthenticated = !!userId
 
+  //console.log(AuthContext)
   console.log(isAuthenticated)
   return (
-    <AuthContext.Provider value={{ token, login, logout, userId }}>
+    <AuthContext.Provider value={{ login, logout, userId }}>
     <BrowserRouter>
       <GlobalStyles />
       { isAuthenticated ?
