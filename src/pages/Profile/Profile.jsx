@@ -20,7 +20,7 @@ export default function Profile() {
     const [activeId, setActiveId] = useState();
     const { request } = useHttp();
 
-    let history = createBrowserHistory(); //????
+    const history = createBrowserHistory(); //????
 
     useEffect(() => {
         async function verifyUser() {
@@ -32,8 +32,8 @@ export default function Profile() {
                     await getQueues();
                 }
             } catch(e) {
-                // history.push("/signin")
-                // document.location.reload(); <- need to fix
+                history.push("/signin")
+                document.location.reload(); //<- need to fix
                 console.log(e.message);
             }
             
