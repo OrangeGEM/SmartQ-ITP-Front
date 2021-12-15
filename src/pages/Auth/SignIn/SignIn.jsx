@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from "react-router-dom";
 
 import { createBrowserHistory } from 'history';
@@ -7,13 +7,14 @@ import { Container, AuthContainer, Image, FormContainer, InputField, ButtonField
 import logo from '../../../images/Auth-logo.png';
 
 import { useHttp } from '../../../hooks/http.hook'
+import { ErrorContext } from '../../../context/error.context';
 
+import ErrorMessage from '../../../ErrorMessage/ErrorMessage.jsx'
 
 export default function SignIn() {
     const { request } = useHttp();
+    const { setError } = useContext(ErrorContext);
     let history = createBrowserHistory();
-
-    const [error, setError] = useState({})
     
     async function SendData(e) {
         e.preventDefault()
@@ -38,10 +39,7 @@ export default function SignIn() {
             }
 
         } catch(e) {
-            setError([{
-                httpError : 'HTTP Error',
-                httpMessage: e.message
-            }])
+            setError( 'HTTP Error', e.message)
             if(e.name == "SyntaxError") {
                 console.log("Данные некорректны");
             } else {
@@ -54,7 +52,7 @@ export default function SignIn() {
     return (
         <Container>
             <AuthContainer>
-            <ErrorMessage error={error} />
+                <ErrorMessage />
                 <Image src={logo} />
                 <FormContainer onSubmit={SendData} novalidate>
                     <InputField type="email" name="email" placeholder="Email" novalidate></InputField>

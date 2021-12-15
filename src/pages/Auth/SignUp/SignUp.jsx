@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from "react-router-dom";
 
 import { createBrowserHistory } from 'history';
@@ -10,15 +10,15 @@ import facebook from '../../../images/Facebook.png';
 import google from '../../../images/Google.png';
 
 import { useHttp } from '../../../hooks/http.hook'
+import { ErrorContext } from '../../../context/error.context';
+import ErrorMessage from '../../../ErrorMessage/ErrorMessage.jsx'
+
 import { createPortal } from 'react-dom';
-
-
-
-import ErrorMessage from '../../../ErrorMessage/ErrorMessage';
 
 export default function SignUp() {
     const { request } = useHttp();
-  
+    const { setError } = useContext(ErrorContext);
+
     let history = createBrowserHistory();
 
 
@@ -45,10 +45,7 @@ export default function SignUp() {
             }
           
         } catch(e) {
-            setError([{
-                httpError : 'HTTP Error',
-                httpMessage: e.message
-            }])
+            setError( 'HTTP Error', e.message)
             if(e.name == "SyntaxError") {
                 console.log("Данные некорректны");
             } else {
@@ -63,7 +60,7 @@ export default function SignUp() {
     return (
         <Container>
             <AuthContainer>
-                <ErrorMessage error={error}/>
+                <ErrorMessage />
                 <Image src={logo} />
                 <FormContainer onSubmit={SendData}>
                     <InputField type="text" placeholder="Email" name="email"></InputField>

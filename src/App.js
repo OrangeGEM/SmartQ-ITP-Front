@@ -1,10 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {
   BrowserRouter,
   Routes,
   Route
 } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
+
+import { ErrorContext } from './context/error.context';
+import { useError } from './hooks/error.hook.js';
+
+
 import LP from './pages/LP/LP.jsx';
 import SignIn from './pages/Auth/SignIn/SignIn.jsx'
 import SignUp from './pages/Auth/SignUp/SignUp.jsx'
@@ -21,15 +26,20 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 export default function App() {
+  const ErrorHandler = useContext(ErrorContext)
+  const { errorTitle, errorMessage, setError } = useError()
+
   return (
-    <BrowserRouter>
-      <GlobalStyles />
-      <Routes>
-        <Route path="/" element={<LP />} exact />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-      </Routes>
-    </BrowserRouter>
+    <ErrorContext.Provider value={{errorTitle, errorMessage, setError}} >
+      <BrowserRouter>
+        <GlobalStyles />
+        <Routes>
+          <Route path="/" element={<LP />} exact />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+        </Routes>
+      </BrowserRouter>
+    </ErrorContext.Provider>
   );
 }
 

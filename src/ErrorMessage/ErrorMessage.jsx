@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-
+import React, { useState, useContext } from 'react';
+import { ErrorContext } from '../context/error.context';
 import { ErrorContainer } from "./styled";
 
 export default function ErrorMessage(props) {
-    const data = props.error;
-
-    console.log(data);
+    const {errorTitle, errorMessage, setError} = useContext(ErrorContext)
+    //console.log( 'Errors in Component: ', errorTitle, errorMessage )
     return (
-        Object.keys(data).length ? (
+        errorTitle && errorMessage ? (
             <ErrorContainer>
-                <h2> { data[0].httpError } </h2>
-                <h2> { data[0].httpMessage } </h2>
+                <h2> { errorTitle } </h2>
+                <h2> { errorMessage } </h2>
             </ErrorContainer>
-        ) : (<></>)
+        ) : <></>
+        
     )
 }
