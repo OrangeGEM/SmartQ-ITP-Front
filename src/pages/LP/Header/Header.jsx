@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {HeaderContainer, Image, HeaderButton} from "../styled";
+import {HeaderContainer, Image, HeaderButton} from "./styled";
 
 import logo from '../../../images/lpLogo.png'
 

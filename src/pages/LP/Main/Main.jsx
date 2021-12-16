@@ -1,7 +1,8 @@
 import React from "react";
 import { useNavigate } from 'react-router-dom';
 
-import img from "../../../images/img-topcont.png";
+import img from "../../../images/img-topcont.svg";
+import img2 from "../../../images/img-topcont2.svg";
 import step1 from "../../../images/step-1.png"
 import step2 from "../../../images/step-2.png"
 import step3 from "../../../images/step-3.png"
@@ -17,16 +18,16 @@ import {
     TopTextConteiner,
     MainButton,
     MainImage,
-    TextInfo,
-    TextTitle,
-    AttentionText,
     TextContainer,
     StepsContainer,
     StepTextContainer,
     NumberSteps,
     Step,
     StartNowContainer,
-} from "../styled";
+} from "./styled";
+import { 
+    TitleText, TextInfo, AttentionText
+}  from "../../../globalStyles";
 
 
 export default function Main() {
@@ -40,7 +41,7 @@ export default function Main() {
         <ContentContainer>
             <TopContentContainer>
                 <TopTextConteiner>
-                    <TextTitle style={{ position: 'absolute' }}>Fast, simple & convenient</TextTitle>
+                    <TitleText style={{ position: 'absolute' }}>Fast, simple & convenient</TitleText>
                     <TextContainer>
                         <TextInfo> Сreate and manage a queue of your </TextInfo>
                         <TextInfo> clients. Customers do not need to </TextInfo>
@@ -59,7 +60,7 @@ export default function Main() {
             </TopContentContainer>
 
             <RightNowContainer>
-                <TextTitle> Right now </TextTitle>
+                <TitleText> Right now </TitleText>
                 <RightNowTextContainer>
                     <TextInfo> Send an SMS with the keyword <AttentionText>BREWER</AttentionText> </TextInfo>
                     <TextInfo> to the service number <AttentionText>+16138006817</AttentionText> </TextInfo>
@@ -71,7 +72,7 @@ export default function Main() {
                 <Step>
                     <MainImage src={step1} />
                     <StepTextContainer>
-                        <TextTitle style={{ 'font-size': '54px' }}> How it works </TextTitle>
+                        <TitleText style={{ 'font-size': '54px' }}> How it works </TitleText>
                         <br />
                         <NumberSteps> STEP 1 </NumberSteps>
                         <TextInfo> Register in the service.  </TextInfo>
@@ -109,7 +110,7 @@ export default function Main() {
             </StepsContainer>
 
             <StartNowContainer>
-                <TextTitle> Start Now </TextTitle>
+                <TitleText> Start Now </TitleText>
                 <TextInfo style={{'margin-bottom':'15px'}}> And you get the opportunity to </TextInfo>
                 <TextInfo style={{'margin-bottom':'35px'}}> control the entire process. </TextInfo>
 

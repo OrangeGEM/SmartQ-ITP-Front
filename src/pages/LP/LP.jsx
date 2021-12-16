@@ -7,6 +7,7 @@ import Footer from './Footer/Footer';
 
 
 import styled from "styled-components";
+import { device } from '../../breakpoint'
 
 const Conteiner = styled.div`
     width: 100vw;
@@ -20,6 +21,10 @@ const ContentContainer = styled.div`
     height: 100vh;
     display: flex;
     flex-direction: column;
+
+    @media ${device.laptop} {
+        width: 98%;
+    }
 `;
 
 export default function LP() {

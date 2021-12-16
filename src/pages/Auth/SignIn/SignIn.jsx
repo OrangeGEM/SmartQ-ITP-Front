@@ -1,4 +1,6 @@
+
 import React, { useState, useContext } from 'react';
+
 import { Link } from "react-router-dom";
 
 import { createBrowserHistory } from 'history';
@@ -7,15 +9,22 @@ import { Container, AuthContainer, Image, FormContainer, InputField, ButtonField
 import logo from '../../../images/Auth-logo.png';
 
 import { useHttp } from '../../../hooks/http.hook'
+
+import { AuthContext } from '../../../context/auth.context'
 import { ErrorContext } from '../../../context/error.context';
+
 
 import ErrorMessage from '../../../ErrorMessage/ErrorMessage.jsx'
 
 export default function SignIn() {
     const { request } = useHttp();
-    const { setError } = useContext(ErrorContext);
+
+    const auth = useContext(AuthContext);
     let history = createBrowserHistory();
-    
+    const { setError } = useContext(ErrorContext);
+
+    console.log('Auth context: ', auth)
+
     async function SendData(e) {
         e.preventDefault()
         const target = e.target;
@@ -29,13 +38,13 @@ export default function SignIn() {
             if(form.password.length < 6)
                 throw new SyntaxError("Данные некорректны");
 
-            console.log(form);
+            console.log('data send: ', form);
             const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/login`, 'POST', {...form})
-            console.log(data);
 
-            if( data.accessToken && data.refreshToken ) {
-                console.log("redirect to profile")
-                history.push('/profile')
+            console.log('data recevied: ', data);
+            if(data.accessToken && data.refreshToken) {
+                //console.log(data.userDto.id)
+                auth.login(data.userDto.id)
             }
 
         } catch(e) {

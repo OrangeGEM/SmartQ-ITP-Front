@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+
 import { Link } from "react-router-dom";
 
 import { createBrowserHistory } from 'history';
@@ -11,6 +12,9 @@ import facebook from '../../../images/Facebook.png';
 import google from '../../../images/Google.png';
 
 import { useHttp } from '../../../hooks/http.hook'
+
+import { AuthContext } from '../../../context/auth.context'
+
 import { ErrorContext } from '../../../context/error.context';
 import ErrorMessage from '../../../ErrorMessage/ErrorMessage.jsx'
 
@@ -18,6 +22,7 @@ import { createPortal } from 'react-dom';
 
 export default function SignUp() {
     const { request } = useHttp();
+    const auth = useContext(AuthContext);
     const { setError } = useContext(ErrorContext);
 
     let history = createBrowserHistory();
@@ -40,9 +45,9 @@ export default function SignUp() {
             const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/register`, 'POST', {...form})
             console.log(data);
           
-            if( data.accessToken && data.refreshToken ) {
-                console.log("redirect to profile")
-                history.push('/profile')
+            if(data.accessToken && data.refreshToken) {
+                auth.login(data.userDto.id)
+                console.log(auth);
             }
           
         } catch(e) {
