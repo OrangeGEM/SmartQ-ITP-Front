@@ -1,59 +1,51 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { createBrowserHistory } from 'history';
 
 import Header from './Header/Header';
 import Queue from './Queue/Queue';
 import Top from './Top/Top';
 import Modal from './Modal/Modal';
+import ErrorMessage from '../../ErrorMessage/ErrorMessage';
 
 import { Container, ContentContainer, QueueContainer } from './styled'
+
+import { AuthContext } from '../../context/auth.context';
+import { ErrorContext } from '../../context/error.context';
 import { useHttp } from '../../hooks/http.hook'
 
 
+
 export default function Profile() {
+    const { request } = useHttp();
+    const { setError } = useContext(ErrorContext);
+    const { userEmail } = useContext(AuthContext)
+
     const [modalActive, setModalActive] = useState(false);
     const [modalActiveMember, setModalActiveMember] = useState(false);
     const [options, setOptions] = useState({});
     const [queues, setQueues] = useState([])
     const [members, setMembers] = useState([])
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState(userEmail);
     const [activeId, setActiveId] = useState();
-    const { request } = useHttp();
 
     const history = createBrowserHistory(); //????
 
     useEffect(() => {
-        async function verifyUser() {
-            try {
-                const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/verify`, 'POST');
-                console.log(data);
-                if(data?.email) {
-                    setEmail(data.email);
-                    await getQueues();
-                }
-            } catch(e) {
-                history.push("/signin")
-                document.location.reload(); //<- need to fix
-                console.log(e.message);
-            }
-            
-        }
-        verifyUser();
-
         async function getQueues() {
             try {
                 const data = await request(`${process.env.REACT_APP_API_URL}/api/profile/getqueue`, 'POST');
                 setQueues(data);
             } catch(e) {
-                console.log(e.message);
+                setError( 'HTTP Error', e.message)
             }
             
         }
-        
+        getQueues();
     }, [])
 
     return (
         <Container>
+            <ErrorMessage />
             <Modal 
                 active={modalActive} 
                 setActive={setModalActive} 

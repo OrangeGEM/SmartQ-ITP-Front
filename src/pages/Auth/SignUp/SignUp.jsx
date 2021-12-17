@@ -1,9 +1,6 @@
 import React, { useState, useContext } from 'react';
-
+import { useNavigate } from 'react-router';
 import { Link } from "react-router-dom";
-
-import { createBrowserHistory } from 'history';
-
 
 import { Container, AuthContainer, Image, FormContainer, InputField, ButtonField, LinkText, FooterContainer, FooterForm } from '../styled';
 
@@ -18,14 +15,12 @@ import { AuthContext } from '../../../context/auth.context'
 import { ErrorContext } from '../../../context/error.context';
 import ErrorMessage from '../../../ErrorMessage/ErrorMessage.jsx'
 
-import { createPortal } from 'react-dom';
 
 export default function SignUp() {
     const { request } = useHttp();
     const auth = useContext(AuthContext);
     const { setError } = useContext(ErrorContext);
-
-    let history = createBrowserHistory();
+    const navigate = useNavigate();
 
 
     async function SendData(e) {
@@ -48,6 +43,7 @@ export default function SignUp() {
             if(data.accessToken && data.refreshToken) {
                 auth.login(data.userDto.id)
                 console.log(auth);
+                navigate('/profile');
             }
           
         } catch(e) {

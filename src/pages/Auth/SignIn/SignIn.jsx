@@ -1,9 +1,7 @@
 
 import React, { useState, useContext } from 'react';
-
+import { useNavigate } from 'react-router';
 import { Link } from "react-router-dom";
-
-import { createBrowserHistory } from 'history';
 
 import { Container, AuthContainer, Image, FormContainer, InputField, ButtonField, LinkText, FooterContainer } from '../styled';
 import logo from '../../../images/Auth-logo.png';
@@ -18,9 +16,8 @@ import ErrorMessage from '../../../ErrorMessage/ErrorMessage.jsx'
 
 export default function SignIn() {
     const { request } = useHttp();
-
+    const navigate = useNavigate();
     const auth = useContext(AuthContext);
-    let history = createBrowserHistory();
     const { setError } = useContext(ErrorContext);
 
     console.log('Auth context: ', auth)
@@ -45,6 +42,7 @@ export default function SignIn() {
             if(data.accessToken && data.refreshToken) {
                 //console.log(data.userDto.id)
                 auth.login(data.userDto.id)
+                navigate('/profile')
             }
 
         } catch(e) {

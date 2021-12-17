@@ -1,10 +1,8 @@
 import React from 'react';
-import { Link } from "react-router-dom";
 
 import Header from './Header/Header';
 import Main from './Main/Main';
 import Footer from './Footer/Footer';
-
 
 import styled from "styled-components";
 import { device } from '../../breakpoint'

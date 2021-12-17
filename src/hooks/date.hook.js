@@ -10,7 +10,7 @@ export const useDate = (time)  => {
   const minutes = today.getMinutes();
   
   const clock = !(hours - 11 < 0) ? `${hours - 12}:${minutes} PM` : `${hours}:${minutes} AM`; 
-  console.log(clock)
+  //console.log(clock)
   return {
     month,
     day,

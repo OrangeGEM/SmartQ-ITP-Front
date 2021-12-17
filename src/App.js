@@ -19,6 +19,7 @@ import SignIn from './pages/Auth/SignIn/SignIn.jsx'
 import SignUp from './pages/Auth/SignUp/SignUp.jsx'
 
 import Profile from './pages/Profile/Profile.jsx';
+import ErrorMessage from './ErrorMessage/ErrorMessage.jsx';
 
 const GlobalStyles = createGlobalStyle`
   body{
@@ -34,16 +35,16 @@ const GlobalStyles = createGlobalStyle`
 
 export default function App() {
 
-  const {login, logout, userId} = useAuth()
+  const {login, logout, userId, userEmail} = useAuth()
   const isAuthenticated = !!userId
   
   const ErrorHandler = useContext(ErrorContext)
   const { errorTitle, errorMessage, setError } = useError()
 
   //console.log(AuthContext)
-  console.log(isAuthenticated)
+  //console.log(isAuthenticated)
   return (
-    <AuthContext.Provider value={{ login, logout, userId }}>
+    <AuthContext.Provider value={{ userId, userEmail, login, logout, isAuthenticated }}>
     <ErrorContext.Provider value={{errorTitle, errorMessage, setError}} >
     <BrowserRouter>
       <GlobalStyles />
@@ -53,13 +54,13 @@ export default function App() {
             <Route path="/" element={<LP />} exact />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </> : <>
           <Routes>
             <Route path="/" element={<LP />} exact />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
-            {/* <Route path="/profile" element={<Profile />} /> */}
           </Routes>
         </>
       }   

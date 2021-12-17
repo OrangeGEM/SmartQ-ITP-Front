@@ -6,7 +6,7 @@ export const ErrorContainer = styled.div`
     position: absolute;
     top: 20px;
     
-    width: 16%;
+    width: 18%;
     
     padding: 10px 25px;
 
