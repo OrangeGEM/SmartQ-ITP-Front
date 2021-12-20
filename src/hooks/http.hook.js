@@ -14,7 +14,7 @@ export const useHttp = () => {
             const data = await response.json();
 
             if(!response.ok) {
-                console.log('Catch: ', data.message)
+                throw new Error(data.message)
             }
 
             return data;

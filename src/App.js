@@ -1,11 +1,11 @@
-
 import React, { useEffect, useState, useContext } from 'react';
-
 import {
   BrowserRouter,
   Routes,
   Route
 } from "react-router-dom";
+import { io } from 'socket.io-client';
+
 import { createGlobalStyle } from "styled-components";
 
 import { AuthContext } from './context/auth.context.js';
@@ -41,11 +41,20 @@ export default function App() {
   const ErrorHandler = useContext(ErrorContext)
   const { errorTitle, errorMessage, setError } = useError()
 
+  useEffect(() => {
+    const socket = io('http://localhost:5001', {
+      withCredentials: true
+    })
+  }, [])
+
+
   //console.log(AuthContext)
   //console.log(isAuthenticated)
+  // console.log(ErrorHandler)
   return (
     <AuthContext.Provider value={{ userId, userEmail, login, logout, isAuthenticated }}>
     <ErrorContext.Provider value={{errorTitle, errorMessage, setError}} >
+    <ErrorMessage />
     <BrowserRouter>
       <GlobalStyles />
       { isAuthenticated ?

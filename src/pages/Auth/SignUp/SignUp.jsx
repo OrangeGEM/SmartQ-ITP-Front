@@ -19,9 +19,9 @@ import ErrorMessage from '../../../ErrorMessage/ErrorMessage.jsx'
 export default function SignUp() {
     const { request } = useHttp();
     const auth = useContext(AuthContext);
-    const { setError } = useContext(ErrorContext);
-    const navigate = useNavigate();
+    const error = useContext(ErrorContext);
 
+    const navigate = useNavigate();
 
     async function SendData(e) {
         e.preventDefault()
@@ -47,7 +47,7 @@ export default function SignUp() {
             }
           
         } catch(e) {
-            setError( 'HTTP Error', e.message)
+            error.setError( 'HTTP Error', e.message)
             if(e.name == "SyntaxError") {
                 console.log("Данные некорректны");
             } else {
@@ -62,7 +62,6 @@ export default function SignUp() {
     return (
         <Container>
             <AuthContainer>
-                <ErrorMessage />
                 <Image src={logo} />
                 <FormContainer onSubmit={SendData}>
                     <InputField type="text" placeholder="Email" name="email"></InputField>

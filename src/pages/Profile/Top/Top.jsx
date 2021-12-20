@@ -1,20 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
-import { TopContainer, Icon, ColumnContainer, RowContainer, TitleText, DescriptionText, ActionText } from '../styled';
-import add from '../../../images/profile/add.png';
+import { Container } from './styled'
+import plus from '../../../images/profile/add.svg'
+import { ColumnContainer, ProfileAddQueue, ProfileTitleText, ProfileTotalQueue, RowContainer } from '../../../globalStyles';
 
-export default function Top({data, modalActive, setModalActive}) {
+export default function Top({ count }) {
 
     return (
-        <TopContainer>
+        <Container>
             <ColumnContainer>
-                <TitleText> My queues </TitleText>
-                <DescriptionText> Total: {data.length} </DescriptionText>
+                <ProfileTitleText> My queues </ProfileTitleText>
+                <ProfileTotalQueue> Total: {count} </ProfileTotalQueue>
             </ColumnContainer>
-            <RowContainer>
-                <ActionText onClick={ () => setModalActive(true) }> ADD NEW QUEUE </ActionText>
-                <Icon src={add} style={{'width':'20px', 'height':'20px', 'marginLeft':'15px', "cursor":"pointer"}} onClick={ () => setModalActive(true) }/>
+
+            <RowContainer style={{alignItems:"center"}}>
+                <ProfileAddQueue> ADD NEW QUEUE </ProfileAddQueue>
+                <img src={plus} style={{width:"19px", height:"19px", cursor:"pointer"}}/>
             </RowContainer>
-        </TopContainer>
+        </Container>
     );
 }
