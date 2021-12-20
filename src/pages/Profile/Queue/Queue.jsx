@@ -5,6 +5,13 @@ import { Container } from './styled'
 
 
 export default function Queue({ queues }) {
+    const [members, setMembers] = useState([])
+    
+    useEffect(() => {
+        setMembers(queues.find((obj) => { return (obj.wrap === true) })?.units);
+    }, [queues])
+
+
     return (
         <Container>
             {
@@ -12,8 +19,11 @@ export default function Queue({ queues }) {
                     return (<Queues  queue={item}></Queues>)
                 }) : <></>
             }
-            {
-                
+
+            {   
+                members ? members.map((item) => {
+                    return (<Members member={item}></Members>)
+                }) : <></>
             }
         </Container>
     );
