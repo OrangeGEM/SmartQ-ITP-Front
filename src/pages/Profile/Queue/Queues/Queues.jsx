@@ -6,24 +6,32 @@ import { Container } from './styled'
 import key from '../../../../images/profile/key.svg'
 import group from '../../../../images/profile/group.svg'
 import arrow from '../../../../images/profile/arrow.svg'
+import deleteI from '../../../../images/profile/queueDelete.svg'
+import settingsI from '../../../../images/profile/queueSettings.svg'
 
-export default function Queues({ queue }) {
-    console.log(queue)
+export default function Queues({ queue, handleWrap }) {
+
+
+
+    //console.log(queue)
     return (
         <>
         {
             queue.wrap ? (
-                <Container style={{ backgroundColor: "#E6EBF5" }}>
+                <Container style={{ backgroundColor: "#D6E0F0" }}>
                     <RowContainer style={{ justifyContent: "space-between", width: "100%" }}>
                         <ColumnContainer>
                             <QueueTitleText style={{ marginBottom: "15px" }}> {queue.title} </QueueTitleText>
                             <RowContainer style={{ alignItems: "baseline" }}>
-                                <img src={key} />
+                                <img src={key} style={{ width:"11px", height:"11px" }}/>
                                 <QueueKeyword> {queue.key} </QueueKeyword>
                             </RowContainer>
                             <DescriptionText> {queue.desc} </DescriptionText>
                         </ColumnContainer>
                         <ColumnContainer>
+                            <RowContainer style={{justifyContent:"flex-end", marginBottom:"10px"}}>
+                                <img src={settingsI} style={{width:"21px", height:"21px"}}/>
+                            </RowContainer>
                             <RowContainer style={{ alignSelf: "flex-end", marginBottom: "15px" }}>
                                 <img src={group} />
                                 <ProfileTitleText style={{ marginLeft: "7px" }}> {queue.units.length} </ProfileTitleText>
@@ -33,7 +41,7 @@ export default function Queues({ queue }) {
                     </RowContainer>
                 </Container>
             ) : (
-                <Container style={{ backgroundColor: "#D6E0F0" }}>
+                <Container style={{ backgroundColor: "#E6EBF5" }} onClick={(e) => {handleWrap(queue)}}>
                     <RowContainer style={{ width: "100%", justifyContent: "space-between", alignItems: "center" }}>
                         <QueueTitleText> {queue.title} </QueueTitleText>
                         <img src={arrow} />

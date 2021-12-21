@@ -130,3 +130,57 @@ export const DescriptionText = styled.div`
 
     margin-bottom: 11px;
 `;
+
+export const DescriptionMember = styled(ProfileTotalQueue)`
+    font-weight: 500;
+`
+
+export const TitleModal = styled.div`
+    font-family: Epilogue;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 102.6%;
+
+    margin-bottom: 20px;
+`;
+
+export const InputsTitleModal = styled.div`
+    font-family: Futura PT;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 15px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+
+    margin-bottom: 10px;
+
+    color: #8D93AB;
+`;
+
+export const AttentionTextModal = styled.div`
+    font-family: DM Mono;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 10px;
+    line-height: 155.8%;
+    color: #F54D4D;
+
+    margin-top: 5px;
+`;
+
+export const ActionText = styled.button`
+    font-family: Futura PT;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+
+    color: #F59E6A;
+
+    cursor: pointer;
+    border:0;
+`;

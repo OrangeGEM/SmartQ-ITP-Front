@@ -14,6 +14,15 @@ export const useAuth = () => {
 
     const logout = useCallback( () => {
         setUserId(null)
+        async function deleteCookies() {
+            try {
+                const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/logout`, 'POST')
+                console.log(data) 
+            } catch(e) {
+                console.log(e)
+            }
+        }
+        deleteCookies();
     }, [])
 
   

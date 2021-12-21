@@ -9,12 +9,14 @@ import { useHttp } from '../../hooks/http.hook'
 import Header from './Header/Header.jsx'
 import Top from './Top/Top.jsx';
 import Queue from './Queue/Queue.jsx';
+import Modal from './Modal/Modal';
 
 export default function Profile() {
     const { request } = useHttp();
     const { isAuthenticated, userId, userEmail } = useContext(AuthContext)
 
     const [queues, setQueues] = useState([]);
+    const [modalSettings, setModalSettings] = useState({})
 
     useEffect(() => {
         if(isAuthenticated) {
@@ -29,10 +31,15 @@ export default function Profile() {
 
     return (
         <Container>
+            {
+                modalSettings ? (
+                    <Modal settings={modalSettings} setSettings={setModalSettings}/>
+                ) : <></>
+            }
             <ContentContainer>
                 <Header email={userEmail}/>
-                <Top count={queues.length}/>
-                <Queue queues={queues} />
+                <Top count={queues.length} setSettings={setModalSettings}/>
+                <Queue queues={queues} setQueues={setQueues} />
             </ContentContainer>
         </Container>
     );
