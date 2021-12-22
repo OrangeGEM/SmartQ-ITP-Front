@@ -23,6 +23,7 @@ export default function Profile() {
             async function getQueue() {
                 const data = await request(`${process.env.REACT_APP_API_URL}/api/profile/getqueue`, 'POST', {userId})
                 setQueues(data)
+                console.log(data)
             }
             getQueue();
         }   
@@ -33,13 +34,13 @@ export default function Profile() {
         <Container>
             {
                 modalSettings ? (
-                    <Modal settings={modalSettings} setSettings={setModalSettings}/>
+                    <Modal settings={modalSettings} setSettings={setModalSettings} queues={queues} setQueues={setQueues}/>
                 ) : <></>
             }
             <ContentContainer>
                 <Header email={userEmail}/>
-                <Top count={queues.length} setSettings={setModalSettings}/>
-                <Queue queues={queues} setQueues={setQueues} />
+                <Top count={queues.length} setSettings={setModalSettings} queues={queues}/>
+                <Queue queues={queues} setQueues={setQueues} setSettings={setModalSettings}/>
             </ContentContainer>
         </Container>
     );

@@ -4,7 +4,7 @@ import { Container } from './styled'
 import plus from '../../../images/profile/add.svg'
 import { ColumnContainer, ProfileAddQueue, ProfileTitleText, ProfileTotalQueue, RowContainer } from '../../../globalStyles';
 
-export default function Top({ count, setSettings }) {
+export default function Top({ count, setSettings, queues }) {
 
     function setModalQueuesSettings() {
         const settings = {
@@ -14,7 +14,8 @@ export default function Top({ count, setSettings }) {
                 nameValue: '',
                 keywordTitle: 'KEYWORD',
                 keywordValue: '',
-                keywordAttention: 'This keyword is not unique. Change is the keyword.',
+                dateTitle: 'DATE',
+                dateValue: '',
                 descriptionTitle : 'DESCRIPTION',
                 descriptionValue: '',
             },
@@ -36,7 +37,7 @@ export default function Top({ count, setSettings }) {
                 dateTitle: 'DATE',
                 dateValue: '',
                 phoneAttention: 'Enter phone number in specified format',
-                phonePattern: 'Format: 123-456-7890'
+                phonePattern: 'Format: +71234567890'
             },
             default: {
                 actionText: 'Create',
@@ -60,10 +61,14 @@ export default function Top({ count, setSettings }) {
                     <img src={plus} style={{width:"19px", height:"19px", cursor:"pointer"}}/>
                 </RowContainer>
 
-                <RowContainer name="member" style={{alignItems:"center"}} onClick={setModalMembersSettings}>
-                    <ProfileAddQueue> ADD NEW MEMBER </ProfileAddQueue>
-                    <img src={plus} style={{width:"19px", height:"19px", cursor:"pointer"}}/>
-                </RowContainer>
+                {
+                    queues.find(item => item.wrap === true)?.wrap ? (
+                        <RowContainer name="member" style={{alignItems:"center"}} onClick={setModalMembersSettings}>
+                            <ProfileAddQueue> ADD NEW MEMBER </ProfileAddQueue>
+                            <img src={plus} style={{width:"19px", height:"19px", cursor:"pointer"}}/>
+                        </RowContainer>
+                    ) : <></>
+                }
             </ColumnContainer>
 
         </Container>

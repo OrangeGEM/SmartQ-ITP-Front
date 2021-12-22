@@ -12,8 +12,8 @@ export const Container = styled.div`
 `;
 
 export const Content = styled.form`
-    width: 330px;
-    height: 430px;
+    width: 335px;
+    height: 500px;
     background-color: #F1F3F8;
     
     padding: 30px 15px;

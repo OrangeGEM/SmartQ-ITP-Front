@@ -9,9 +9,29 @@ import arrow from '../../../../images/profile/arrow.svg'
 import deleteI from '../../../../images/profile/queueDelete.svg'
 import settingsI from '../../../../images/profile/queueSettings.svg'
 
-export default function Queues({ queue, handleWrap }) {
+export default function Queues({ queue, handleWrap, setSettings }) {
 
-
+    function handleEdit() {
+        const settings = {
+            queue: {
+                title: 'Add new queue',
+                nameTitle : 'QUEUE NAME',
+                nameValue: queue.title,
+                keywordTitle: 'KEYWORD',
+                keywordValue: queue.keyword,
+                dateTitle: 'DATE',
+                dateValue: new Date(queue.date),
+                descriptionTitle : 'DESCRIPTION',
+                descriptionValue: queue.description,
+            },
+            default: {
+                actionText: 'Delete',
+                editText: 'Edit'
+            }
+        }
+        setSettings(settings)
+        //console.log('Set options:', settings)
+    }
 
     //console.log(queue)
     return (
@@ -24,19 +44,19 @@ export default function Queues({ queue, handleWrap }) {
                             <QueueTitleText style={{ marginBottom: "15px" }}> {queue.title} </QueueTitleText>
                             <RowContainer style={{ alignItems: "baseline" }}>
                                 <img src={key} style={{ width:"11px", height:"11px" }}/>
-                                <QueueKeyword> {queue.key} </QueueKeyword>
+                                <QueueKeyword> {queue.keyword} </QueueKeyword>
                             </RowContainer>
-                            <DescriptionText> {queue.desc} </DescriptionText>
+                            <DescriptionText> {queue.description} </DescriptionText>
                         </ColumnContainer>
                         <ColumnContainer>
                             <RowContainer style={{justifyContent:"flex-end", marginBottom:"10px"}}>
-                                <img src={settingsI} style={{width:"21px", height:"21px"}}/>
+                                <img src={settingsI} style={{width:"21px", height:"21px", cursor:"pointer"}} onClick={() => handleEdit()}/>
                             </RowContainer>
                             <RowContainer style={{ alignSelf: "flex-end", marginBottom: "15px" }}>
-                                <img src={group} />
+                                <img src={group} /> 
                                 <ProfileTitleText style={{ marginLeft: "7px" }}> {queue.units.length} </ProfileTitleText>
                             </RowContainer>
-                            <DescriptionText> {queue.time} </DescriptionText>
+                            <DescriptionText> {queue.date} </DescriptionText>
                         </ColumnContainer>
                     </RowContainer>
                 </Container>

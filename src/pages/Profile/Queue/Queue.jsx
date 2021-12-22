@@ -7,7 +7,7 @@ import { useHttp } from '../../../hooks/http.hook'
 
 import { Container, QueuesContainer, MembersContainer } from './styled'
 
-export default function Queue({ queues, setQueues }) {
+export default function Queue({ queues, setQueues, setSettings }) {
     const [members, setMembers] = useState([])
     const { request } = useHttp();
     useEffect(() => {
@@ -29,8 +29,6 @@ export default function Queue({ queues, setQueues }) {
             const data = await request(`${process.env.REACT_APP_API_URL}/api/profile/deletemember`, 'POST', {queueId: wrappedQueueId, members: membersWithDelete})
             if(data) {
                 queues.find(item => { return(item._id == wrappedQueueId) }).units = membersWithDelete
-                
-                setMembers([...membersWithDelete])
                 setQueues([...queues])
             }
         } catch(e) {
@@ -48,6 +46,7 @@ export default function Queue({ queues, setQueues }) {
                         <Queues  
                             queue={item}
                             handleWrap={handleWrapQueue}
+                            setSettings={setSettings}
                         />
                     )
                 }) : <></>
@@ -61,6 +60,7 @@ export default function Queue({ queues, setQueues }) {
                             member={item} 
                             index={index} 
                             handleDelete={handleDeleteMember}
+                            setSettings={setSettings}
                         />
                     )
                 }) : <></>
