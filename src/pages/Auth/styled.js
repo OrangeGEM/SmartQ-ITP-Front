@@ -54,6 +54,8 @@ export const InputField = styled.input`
 
     border: 0;
 
+    outline:none;
+    
     margin-bottom: 16px;
     box-sizing: border-box;
     padding-left: 15px;
