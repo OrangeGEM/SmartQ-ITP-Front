@@ -1,7 +1,6 @@
 
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router';
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 import { Container, AuthContainer, Image, FormContainer, InputField, ButtonField, LinkText, FooterContainer } from '../styled';
 import logo from '../../../images/Auth-logo.png';
@@ -17,6 +16,9 @@ import ErrorMessage from '../../../ErrorMessage/ErrorMessage.jsx'
 export default function SignIn() {
     const { request } = useHttp();
     const navigate = useNavigate();
+    const location = useLocation(); 
+
+    const fromPage = location?.state?.from?.pathname || '/';
 
     const auth = useContext(AuthContext);
     const error = useContext(ErrorContext);
