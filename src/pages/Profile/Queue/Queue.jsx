@@ -9,6 +9,7 @@ import { Container, QueuesContainer, MembersContainer } from './styled'
 
 export default function Queue({ queues, setQueues, setSettings }) {
     const [members, setMembers] = useState([])
+    console.log(members)
     const { request } = useHttp();
     useEffect(() => {
         setMembers(queues.find((obj) => { return (obj.wrap === true) })?.units);

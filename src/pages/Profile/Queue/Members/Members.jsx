@@ -33,6 +33,8 @@ export default function Members({member, index, handleDelete, setSettings}) {
             <DescriptionMember> {member.id} </DescriptionMember>
             <DescriptionMember> {member.ticket} </DescriptionMember>
             <DescriptionMember> {member.phone} </DescriptionMember>
+            <DescriptionMember> {member.date} </DescriptionMember>
+
 
             <RowContainer>
                 <DescriptionMember style={{marginRight:"30px"}}> {member.time} </DescriptionMember> 
