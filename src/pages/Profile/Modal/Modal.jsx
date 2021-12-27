@@ -11,6 +11,7 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
     const [time, setTime] = useState(new Date())
     const [keywordErrored, setKeywordErrored] = useState(false)
     const [nameErrored, setNameErrored] = useState(false)
+    const [PhoneErrored, setPhoneErrored] = useState(false)
 
     const { userId } = useContext(AuthContext)
     const { request } = useHttp();
@@ -27,13 +28,14 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
         console.log(form)
 
         if(settings.hasOwnProperty('queue')) {
-            const isKeywordErrored = !!form.keyword === !!queues.find((item) => item.keyword === form.keyword)
-            const isNameErrored = form.title === "";
+            const isKeywordErrored = (!!form.keyword === !!queues.find((item) => item.keyword === form.keyword)) || !(form.keyword.replace(/\s/g, ''));
+            const isNameErrored = form.keyword.replace(/\s/g, '') === "";
+            
             setKeywordErrored(isKeywordErrored);
-            setNameErrored(isNameErrored)
+            setNameErrored(isNameErrored);
 
             if(settings.default.editText === "") {
-                console.log(isKeywordErrored)
+                //console.log(isKeywordErrored)
                 if(!isKeywordErrored && !isNameErrored) {
                     try {
                         const data = await request(`${process.env.REACT_APP_API_URL}/api/profile/createqueue`, 'POST', form)
@@ -80,34 +82,40 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
                 }
             }
         } else if(settings.hasOwnProperty('member')) {
+            const pattern = /[\+]*[7-8]{1}\s?[\(]*9[0-9]{2}[\)]*\s?\d{3}[-]*\d{2}[-]*\d{2}/
+            const isPhoneErrored = pattern.test(form.phone);
+            setPhoneErrored(!isPhoneErrored)
+            console.log(isPhoneErrored)
             try {
-                if(settings.default.editText === "") {
-                    const data = await request(
-                        `${process.env.REACT_APP_API_URL}/api/profile/createmember`, 'POST', {
-                            queue: queue, 
-                            member: {phone:form.phone, date: form.date}
+                if( isPhoneErrored ) {
+                    if(settings.default.editText === "") {
+                        const data = await request(
+                            `${process.env.REACT_APP_API_URL}/api/profile/createmember`, 'POST', {
+                                queue: queue, 
+                                member: {phone:form.phone, date: form.date}
+                            }
+                        );
+                        if(data.ok) {
+                            console.log('Received data:', data)
+                            queues.find(item => item._id === queueId).units.push(data.member)
+                            queues.find(item => item._id === queueId).ticketNum = data.ticketNum;
+                            setQueues([...queues])
+                            setSettings(null)
                         }
-                    );
-                    if(data.ok) {
-                        console.log('Received data:', data)
-                        queues.find(item => item._id === queueId).units.push(data.member)
-                        queues.find(item => item._id === queueId).ticketNum = data.ticketNum;
-                        setQueues([...queues])
-                        setSettings(null)
-                    }
-                    
-                } else {
-                    const data = await request(
-                        `${process.env.REACT_APP_API_URL}/api/profile/editmember`, 'POST', {
-                            queue: queue,
-                            member: form
+                        
+                    } else {
+                        const data = await request(
+                            `${process.env.REACT_APP_API_URL}/api/profile/editmember`, 'POST', {
+                                queue: queue,
+                                member: form
+                            }
+                        );
+                        if(data.ok) {
+                            console.log(data)
+                            queues.find(item => item._id === queueId).units = [...data.members]
+                            setQueues([...queues])
+                            setSettings(null)
                         }
-                    );
-                    if(data.ok) {
-                        console.log(data)
-                        queues.find(item => item._id === queueId).units = [...data.members]
-                        setQueues([...queues])
-                        setSettings(null)
                     }
                 }
             } catch(e) {
@@ -124,7 +132,7 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
                 return {
                     user_id: userId,
                     title: target.name.value,
-                    keyword: target.keyword.value,
+                    keyword: target.keyword.value.replace(/\s/g, ''),
                     description: target.description.value,
                     date: setServerTime(),
                 } 
@@ -132,7 +140,7 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
                 return {
                     user_id: userId,
                     title: target.name.value,
-                    keyword: target.keyword.value,
+                    keyword: target.keyword.value.replace(/\s/g, ''),
                     description: target.description.value,
                     date: setServerTime(),
                     wrap: false,
@@ -211,8 +219,16 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
                     <InputContainer>
                         <InputContainer>
                             <InputsTitleModal> { settings.member.phoneTitle } </InputsTitleModal>
-                            <InputField name="phone" defaultValue={ settings.member.phoneValue } type="tel" pattern="[+]{1}7[0-9]{3}[0-9]{3}[0-9]{4}" autoComplete='off'/>
-                            <AttentionTextModal> {settings.member.phonePattern} </AttentionTextModal>
+                            <InputField name="phone" 
+                                        defaultValue={ settings.member.phoneValue }
+                                        style={!PhoneErrored ? {} : {background:"rgba(239, 85, 85, 0.14)", color:"rgba(239, 85, 85, 1)"}} 
+                                        type="tel"  
+                                        autoComplete='off' 
+                                        maxLength="16" 
+                                        placeholder='+_(___)___-__-__' 
+                                        onChange={() => setPhoneErrored(false)}
+                        />
+                            {/* <AttentionTextModal> {settings.member.phonePattern} </AttentionTextModal> */}
                             <AttentionTextModal style={{margin:0}}> {settings.member.phoneAttention} </AttentionTextModal>
                         </InputContainer>
 
@@ -224,14 +240,13 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
                    
                     <RowContainer style={{justifyContent:"space-between", marginTop:"30px"}}>
                         {settings.member?.memberId ? (
-                            <><ActionText name="delete" type="submit"> {settings.default.editText} </ActionText>
-                            <ActionText style={{color:"#393B44"}} onClick={() => setSettings(null)}> CLOSE </ActionText></>
-                        ) : (
-                            <><ActionText name="delete" type="submit"> {settings.default.actionText} </ActionText>
-                            <ActionText style={{color:"#393B44"}} onClick={() => setSettings(null)}> CLOSE </ActionText></>
-                        )
-                    
+                                <><ActionText name="delete" type="submit"> {settings.default.editText} </ActionText></>
+                            ) : (
+                                <><ActionText name="delete" type="submit"> {settings.default.actionText} </ActionText>
+                                </>
+                            )
                         }
+                        <ActionText style={{color:"#393B44"}} onClick={() => setSettings(null)}> CLOSE </ActionText>
                     </RowContainer>
 
                 </Content>
