@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { ColumnContainer, DescriptionText, ProfileTitleText, QueueKeyword, QueueTitleText, RowContainer } from '../../../../globalStyles';
-
+import { useDate } from '../../../../hooks/date.hook';
 import { Container } from './styled'
 
 import key from '../../../../images/profile/key.svg'
@@ -10,6 +10,7 @@ import deleteI from '../../../../images/profile/queueDelete.svg'
 import settingsI from '../../../../images/profile/queueSettings.svg'
 
 export default function Queues({ queue, handleWrap, setSettings }) {
+    const { setQueueTime } = useDate();
 
     function handleEdit() {
         const settings = {
@@ -54,9 +55,9 @@ export default function Queues({ queue, handleWrap, setSettings }) {
                             </RowContainer>
                             <RowContainer style={{ alignSelf: "flex-end", marginBottom: "15px" }}>
                                 <img src={group} /> 
-                                <ProfileTitleText style={{ marginLeft: "7px" }}> {queue.units.length} </ProfileTitleText>
+                                <ProfileTitleText style={{ marginLeft: "7px" }}> {/*queue.units.length*/} 0 </ProfileTitleText>
                             </RowContainer>
-                            <DescriptionText> {queue.date} </DescriptionText>
+                            <DescriptionText> {setQueueTime(queue.date)} </DescriptionText>
                         </ColumnContainer>
                     </RowContainer>
                 </Container>

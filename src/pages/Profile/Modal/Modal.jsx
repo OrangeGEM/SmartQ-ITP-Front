@@ -14,7 +14,7 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
 
     const { userId } = useContext(AuthContext)
     const { request } = useHttp();
-    const { month, day, year, clock } = useDate(time);
+    const { setClientTime, setServerTime } = useDate(time);
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -126,7 +126,7 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
                     title: target.name.value,
                     keyword: target.keyword.value,
                     description: target.description.value,
-                    date: `${month}. ${day} ${year}`,
+                    date: setServerTime(),
                 } 
             } else {
                 return {
@@ -134,7 +134,7 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
                     title: target.name.value,
                     keyword: target.keyword.value,
                     description: target.description.value,
-                    date: `${month}. ${day} ${year}`,
+                    date: setServerTime(),
                     wrap: false,
                     units: [],
                     ticketNum: 0
@@ -147,7 +147,7 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
                 ticket: settings.member.memberTicket,
                 queue_id: queues.find(item => item.wrap === true)._id, 
                 phone: target.phone.value,
-                date: `${month}. ${day} ${clock}`
+                date: setServerTime()
             }
         }
     }

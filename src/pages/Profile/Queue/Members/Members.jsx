@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
-
+import { useDate } from '../../../../hooks/date.hook';
 import { Container } from './styled'
 import deleteI from '../../../../images/profile/delete.svg'
 import settingsI from '../../../../images/profile/queueSettings.svg'
 import { DescriptionMember, RowContainer } from '../../../../globalStyles';
 
 export default function Members({member, index, handleDelete, setSettings}) {
+    const { setMemberTime } = useDate();
+
 
     function setModalMembersSettings() {
         const settings = {
@@ -33,7 +35,7 @@ export default function Members({member, index, handleDelete, setSettings}) {
             <DescriptionMember> {member.id} </DescriptionMember>
             <DescriptionMember> {member.ticket} </DescriptionMember>
             <DescriptionMember> {member.phone} </DescriptionMember>
-            <DescriptionMember> {member.date} </DescriptionMember>
+            <DescriptionMember> {setMemberTime(member.date)} </DescriptionMember>
 
 
             <RowContainer>
