@@ -23,7 +23,7 @@ export default function SignIn() {
     const auth = useContext(AuthContext);
     const error = useContext(ErrorContext);
 
-    //console.log('Auth context: ', auth)
+    console.log('Auth context: ', auth)
     //console.log('Error context: ', error)
 
     async function SendData(e) {
