@@ -212,8 +212,10 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
                 </Content>
             </Container>
         ) : settings.hasOwnProperty('member') ? (
+            
             <Container onClick={() => setSettings(null)}>
-                <Content onSubmit={ e => handleSubmit(e) } onClick={ e => e.stopPropagation() }  style={{height:"300px"}}>
+                {console.log(settings)}
+                <Content onSubmit={ e => handleSubmit(e) } onClick={ e => e.stopPropagation() }  style={{height:"350px"}}>
                     <TitleModal> {settings.member.title} </TitleModal>
                     <InputContainer>
                         <InputContainer>
@@ -234,6 +236,11 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
                         <InputContainer>
                             <InputsTitleModal> { settings.member.dateTitle } </InputsTitleModal>
                             <InputField name="date" defaultValue={ settings.member.dateValue } type="datetime-local"  onChange={(e) => setTime(e.target.value)} autoComplete='off'/>
+                        </InputContainer>
+
+                        <InputContainer>
+                            <InputsTitleModal> File upload </InputsTitleModal>
+                            <InputField name="file" type="file"/>
                         </InputContainer>
                     </InputContainer>
                    

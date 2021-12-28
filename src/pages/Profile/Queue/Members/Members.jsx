@@ -20,7 +20,8 @@ export default function Members({member, index, handleDelete, setSettings}) {
                 dateTitle: 'DATE',
                 dateValue: member.date,
                 phoneAttention: 'Enter phone number in specified format',
-                phonePattern: 'Format: +71234567890'
+                phonePattern: 'Format: +71234567890',
+                fileTitle: 'File'
             },
             default: {
                 editText: 'Edit'
