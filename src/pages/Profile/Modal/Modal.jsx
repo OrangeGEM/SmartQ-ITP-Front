@@ -29,8 +29,7 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
 
         if(settings.hasOwnProperty('queue')) {
             const isKeywordErrored = (!!form.keyword === !!queues.find((item) => item.keyword === form.keyword)) || !(form.keyword.replace(/\s/g, ''));
-            const isNameErrored = form.keyword.replace(/\s/g, '') === "";
-            
+            const isNameErrored = !(form.title.replace(/\s/g, ''));
             setKeywordErrored(isKeywordErrored);
             setNameErrored(isNameErrored);
 
