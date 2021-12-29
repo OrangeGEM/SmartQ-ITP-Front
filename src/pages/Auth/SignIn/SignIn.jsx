@@ -24,12 +24,12 @@ export default function SignIn() {
     const error = useContext(ErrorContext);
 
     console.log('Auth context: ', auth)
-    console.log('Error context: ', error)
+    //console.log('Error context: ', error)
 
     async function SendData(e) {
         e.preventDefault()
         const target = e.target;
-        console.log(target)
+        //console.log(target)
         let form = {
             'email': target.email.value,
             'password': target.password.value,
@@ -39,10 +39,10 @@ export default function SignIn() {
             if(form.password.length < 6)
                 throw new SyntaxError("Данные некорректны");
 
-            console.log('data send: ', form);
+            //console.log('data send: ', form);
             const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/login`, 'POST', {...form})
 
-            console.log('data recevied: ', data);
+            //console.log('data recevied: ', data);
             if(data.accessToken && data.refreshToken) {
                 //console.log(data.userDto.id)
                 auth.login(data.userDto.id)

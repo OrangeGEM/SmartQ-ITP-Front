@@ -1,21 +1,28 @@
-export const useDate = (time)  => {
-  //console.log(time)
-  const locale = 'en';
-  const today = new Date(time)
+import {useState, useCallback, useContext} from 'react'
+import moment from 'moment';
 
-  const month = today.toLocaleDateString(locale, { month: "short" })
-  const day = today.getDate();
-  const year = today.getFullYear();
-  const hours = today.getHours();
-  const minutes = today.getMinutes();
-  
-  const clock = !(hours - 11 < 0) ? `${hours - 12}:${minutes} PM` : `${hours}:${minutes} AM`; 
-  //console.log(clock)
+export const useDate = (time)  => {
+
+  const offset = new Date(time).getTimezoneOffset();
+
+  const setQueueTime = useCallback( dbdate => {
+    const date = moment(dbdate).utc(offset).format('MMM. DD YYYY')
+    return date
+  })
+
+  const setMemberTime = useCallback( dbdate => {
+    const date = moment(dbdate).format('MMM.DD HH:ss')
+    return date
+  })
+
+  function setServerTime() {
+    const date = moment(time).utc()
+    return date
+  }
+
+
   return {
-    month,
-    day,
-    year,
-    clock
+    setQueueTime, setMemberTime, setServerTime
   }
   
 };

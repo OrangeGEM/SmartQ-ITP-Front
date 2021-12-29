@@ -36,13 +36,13 @@ export default function SignUp() {
             if(form.password.length < 6 || form.password != form.rpassword)
                 throw new SyntaxError("Данные некорректны");
 
-            console.log(form);
+            //console.log(form);
             const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/register`, 'POST', {...form})
-            console.log(data);
+            //console.log(data);
           
             if(data.accessToken && data.refreshToken) {
                 auth.login(data.userDto.id)
-                console.log(auth);
+                //console.log(auth);
                 navigate('/profile');
             }
           

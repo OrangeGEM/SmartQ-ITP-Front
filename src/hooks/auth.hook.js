@@ -1,4 +1,4 @@
-import {useState, useCallback, useEffect, useContext} from 'react'
+import {useState, useCallback, useEffect, useContext, useLayoutEffect} from 'react'
 import { useHttp } from './http.hook'
 
 export const useAuth = () => {
@@ -27,7 +27,7 @@ export const useAuth = () => {
 
   
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         async function verifyUser() {
             try {
                 const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/verify`, 'POST') 
