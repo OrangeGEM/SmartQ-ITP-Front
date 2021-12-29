@@ -1,9 +1,6 @@
 import React, { useState, useContext } from 'react';
-
+import { useNavigate } from 'react-router';
 import { Link } from "react-router-dom";
-
-import { createBrowserHistory } from 'history';
-
 
 import { Container, AuthContainer, Image, FormContainer, InputField, ButtonField, LinkText, FooterContainer, FooterForm } from '../styled';
 
@@ -18,15 +15,13 @@ import { AuthContext } from '../../../context/auth.context'
 import { ErrorContext } from '../../../context/error.context';
 import ErrorMessage from '../../../ErrorMessage/ErrorMessage.jsx'
 
-import { createPortal } from 'react-dom';
 
 export default function SignUp() {
     const { request } = useHttp();
     const auth = useContext(AuthContext);
-    const { setError } = useContext(ErrorContext);
+    const error = useContext(ErrorContext);
 
-    let history = createBrowserHistory();
-
+    const navigate = useNavigate();
 
     async function SendData(e) {
         e.preventDefault()
@@ -41,17 +36,18 @@ export default function SignUp() {
             if(form.password.length < 6 || form.password != form.rpassword)
                 throw new SyntaxError("Данные некорректны");
 
-            console.log(form);
+            //console.log(form);
             const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/register`, 'POST', {...form})
-            console.log(data);
+            //console.log(data);
           
             if(data.accessToken && data.refreshToken) {
                 auth.login(data.userDto.id)
-                console.log(auth);
+                //console.log(auth);
+                navigate('/profile');
             }
           
         } catch(e) {
-            setError( 'HTTP Error', e.message)
+            error.setError( 'HTTP Error', e.message)
             if(e.name == "SyntaxError") {
                 console.log("Данные некорректны");
             } else {
@@ -66,7 +62,6 @@ export default function SignUp() {
     return (
         <Container>
             <AuthContainer>
-                <ErrorMessage />
                 <Image src={logo} />
                 <FormContainer onSubmit={SendData}>
                     <InputField type="text" placeholder="Email" name="email"></InputField>

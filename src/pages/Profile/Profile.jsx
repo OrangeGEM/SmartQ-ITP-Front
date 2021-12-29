@@ -1,87 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import { createBrowserHistory } from 'history';
+import React, { useState, useEffect, useContext } from 'react';
 
-import Header from './Header/Header';
-import Queue from './Queue/Queue';
-import Top from './Top/Top';
-import Modal from './Modal/Modal';
+import { Container, ContentContainer } from './styled'
 
-import { Container, ContentContainer, QueueContainer } from './styled'
+import { AuthContext } from '../../context/auth.context';
+import { ErrorContext } from '../../context/error.context';
 import { useHttp } from '../../hooks/http.hook'
 
+import Header from './Header/Header.jsx'
+import Top from './Top/Top.jsx';
+import Queue from './Queue/Queue.jsx';
+import Modal from './Modal/Modal';
 
 export default function Profile() {
-    const [modalActive, setModalActive] = useState(false);
-    const [modalActiveMember, setModalActiveMember] = useState(false);
-    const [options, setOptions] = useState({});
-    const [queues, setQueues] = useState([])
-    const [members, setMembers] = useState([])
-    const [email, setEmail] = useState('');
-    const [activeId, setActiveId] = useState();
     const { request } = useHttp();
+    const { isAuthenticated, userId, userEmail } = useContext(AuthContext)
 
-    const history = createBrowserHistory(); //????
+    const [queues, setQueues] = useState([]);
+    const [modalSettings, setModalSettings] = useState({})
 
     useEffect(() => {
-        async function verifyUser() {
-            try {
-                const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/verify`, 'POST');
-                console.log(data);
-                if(data?.email) {
-                    setEmail(data.email);
-                    await getQueues();
-                }
-            } catch(e) {
-                history.push("/signin")
-                document.location.reload(); //<- need to fix
-                console.log(e.message);
+        if(isAuthenticated) {
+            async function getQueue() {
+                const data = await request(`${process.env.REACT_APP_API_URL}/api/profile/getqueue`, 'POST', {userId})
+                setQueues(data)
+                console.log(data)
             }
-            
-        }
-        verifyUser();
+            getQueue();
+        }   
 
-        async function getQueues() {
-            try {
-                const data = await request(`${process.env.REACT_APP_API_URL}/api/profile/getqueue`, 'POST');
-                setQueues(data);
-            } catch(e) {
-                console.log(e.message);
-            }
-            
-        }
-        
     }, [])
 
     return (
         <Container>
-            <Modal 
-                active={modalActive} 
-                setActive={setModalActive} 
-                queues={queues} 
-                setQueues={setQueues}
-                options={options} 
-                setOptions={setOptions} 
-                activeMember={modalActiveMember} 
-                setActiveMember={setModalActiveMember}
-                activeId={activeId}
-                setMembers={setMembers}/>
-                
-                
+            {
+                modalSettings ? (
+                    <Modal settings={modalSettings} setSettings={setModalSettings} queues={queues} setQueues={setQueues}/>
+                ) : <></>
+            }
             <ContentContainer>
-                <Header email={email}/>
-                <Top data={queues} modalActive={modalActive} setModalActive={setModalActive} />
-
-                <QueueContainer>
-                    <Queue 
-                        setActiveId={setActiveId}
-                        queues={queues} 
-                        setQueues={setQueues} 
-                        members={members} 
-                        setMembers={setMembers} 
-                        setOptions={setOptions} 
-                        setModalActive={setModalActive} 
-                        setActiveMember={setModalActiveMember} />
-                </QueueContainer>
+                <Header email={userEmail}/>
+                <Top count={queues.length} setSettings={setModalSettings} queues={queues}/>
+                <Queue queues={queues} setQueues={setQueues} setSettings={setModalSettings}/>
             </ContentContainer>
         </Container>
     );

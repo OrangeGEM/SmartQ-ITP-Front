@@ -1,161 +1,263 @@
-import React, { useState, useEffect } from 'react';
-import { LinkText } from '../../Auth/styled';
+import React, { useState, useEffect, useContext } from 'react';
+import { ActionText, AttentionTextModal, ColumnContainer, InputsTitleModal, RowContainer, TitleModal } from '../../../globalStyles';
+import { AuthContext } from '../../../context/auth.context'
 import { useDate } from '../../../hooks/date.hook';
+import { useHttp } from '../../../hooks/http.hook';
+import { Container, Content, InputContainer, InputField, Field, TextArea } from './styled'
+import key from '../../../images/profile/key.svg'
+import redkey from '../../../images/profile/redkey.svg'
 
-import { Calendar, ModalSubmitButton, ModalInputContainer, ModalInputBlock, DescriptionInputText, ModalContainer, ModalContent, ModalInputField, TitleText, ModalTextArea, RowContainer, ActionText, ColumnContainer } from '../styled'
-import { useHttp } from '../../../hooks/http.hook'
-import moment from 'moment';
-import DateTimePicker from 'react-datetime-picker';
-import { createPortal } from 'react-dom';
+export default function Modal({settings, setSettings, queues, setQueues}) {
+    const [time, setTime] = useState(new Date())
+    const [keywordErrored, setKeywordErrored] = useState(false)
+    const [nameErrored, setNameErrored] = useState(false)
+    const [PhoneErrored, setPhoneErrored] = useState(false)
 
-export default function Modal({ setMembers, activeId, active, setActive, queues, setQueues, options, setOptions, activeMember, setActiveMember}) {
-    const [time, setTime] = useState(new Date());
-    const { month, day, year, clock } = useDate(time);
+    const { userId } = useContext(AuthContext)
     const { request } = useHttp();
+    const { setClientTime, setServerTime } = useDate(time);
 
-    async function handleQueue(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
-        const target = e.target;
-        const submitter = e.nativeEvent.submitter;
-        const form = formCollector(target)
-        //console.log('Form to fetch', form)
-        if(Object.keys(options).length === 0) {
-            if( !form.title || !form.key || !form.desc ) {
-                console.log('Unvalid data')
-                setActive(false);
-                return null;
-            }
-            //console.log('fetch without options')
-            const data = await request(`${process.env.REACT_APP_API_URL}/api/profile/setqueue`, 'POST', form);
-            console.log('response', data)
-            setQueues(data.setQueue);
-
-        } else {
-            if(submitter.name == 'edit') {
-                const data = await request(`${process.env.REACT_APP_API_URL}/api/profile/updatequeue`, 'POST', form);
-                setQueues(data.setQueue);
-            } else {
-                //console.log('fetch with options')
-                const data = await request(`${process.env.REACT_APP_API_URL}/api/profile/deletequeue`, 'POST', form);
-                setQueues(data.setQueue);
-            } 
-            setOptions({})
-            
-        }
-        setActive(false);
-        // Добавить ErrorMessage для оповещение пользователя   
-    }
-
-    async function handleMember(e) {
-        e.preventDefault();
+        const queue = queues.find((item) => item.wrap === true)
+        const queueId = queue?._id;
         const target = e.target
+        const submitter = e.nativeEvent.submitter.name
 
-        const form = {
-            _id: activeId._id,
-            units: activeId.units,
-            phone: target.number.value,
-            time: `${month}. ${day} ${clock}`
-        }
+        const form = collectData(target, submitter);
         console.log(form)
-        if( form.phone.length != 12 || !form.time || !form._id ) {
-            console.log('Unvalid data')
-            setActive(false);
-            return null;
-        }
 
-        const data = await request(`${process.env.REACT_APP_API_URL}/api/profile/updatequeue`, 'POST', form)
-        data.setQueue.map(element => {
-            if(element._id == activeId._id) {
-                element.wrap = true;
-                return element;
+        if(settings.hasOwnProperty('queue')) {
+            const isKeywordErrored = (!!form.keyword === !!queues.find((item) => item.keyword === form.keyword)) || !(form.keyword.replace(/\s/g, ''));
+            const isNameErrored = !(form.title.replace(/\s/g, ''));
+            setKeywordErrored(isKeywordErrored);
+            setNameErrored(isNameErrored);
+
+            if(settings.default.editText === "") {
+                //console.log(isKeywordErrored)
+                if(!isKeywordErrored && !isNameErrored) {
+                    try {
+                        const data = await request(`${process.env.REACT_APP_API_URL}/api/profile/createqueue`, 'POST', form)
+                        if(data.ok) {
+                            form._id = data._id;
+                            console.log('Received data:', data)
+                            setQueues([...queues, form])
+                            setSettings(null)
+                        }
+                    } catch(e) {
+                        console.log(e)
+                    }
+                }
+            } else {  
+                if(submitter === "delete") {
+                    try {
+                        const data = await request(`${process.env.REACT_APP_API_URL}/api/profile/deletequeue`, 'POST', {queueId})
+                        if(data.ok) {
+                            console.log('Received data:', data)
+                            setQueues(queues.filter(item => item._id !== queueId));
+                            setSettings(null)
+                        }
+                    } catch(e) {
+                        console.log(e)
+                    }
+                } else {
+                    try {
+                        if(!isKeywordErrored && !isNameErrored) {
+                            const data = await request(`${process.env.REACT_APP_API_URL}/api/profile/editqueue`, 'POST', {queueId, ...form})
+                            if(data.ok) {
+                                console.log('Received data:', data)
+                                queues.forEach(element => {
+                                    if(element._id == queueId) {
+                                        element = Object.assign(element, form)
+                                    }
+                                });
+                                setQueues([...queues]);
+                                setSettings(null)
+                            }
+                        }
+                    } catch(e) {
+                        console.log(e)
+                    }
+                }
             }
-        })
-
-        setQueues(data.setQueue);
-        setMembers(data.queueMembers);
-        setActiveMember(false);
+        } else if(settings.hasOwnProperty('member')) {
+            const pattern = /[\+]*[7-8]{1}\s?[\(]*9[0-9]{2}[\)]*\s?\d{3}[-]*\d{2}[-]*\d{2}/
+            const isPhoneErrored = pattern.test(form.phone);
+            setPhoneErrored(!isPhoneErrored)
+            console.log(isPhoneErrored)
+            try {
+                if( isPhoneErrored ) {
+                    if(settings.default.editText === "") {
+                        const data = await request(
+                            `${process.env.REACT_APP_API_URL}/api/profile/createmember`, 'POST', {
+                                queue: queue, 
+                                member: {phone:form.phone, date: form.date}
+                            }
+                        );
+                        if(data.ok) {
+                            console.log('Received data:', data)
+                            queues.find(item => item._id === queueId).units.push(data.member)
+                            queues.find(item => item._id === queueId).ticketNum = data.ticketNum;
+                            setQueues([...queues])
+                            setSettings(null)
+                        }
+                        
+                    } else {
+                        const data = await request(
+                            `${process.env.REACT_APP_API_URL}/api/profile/editmember`, 'POST', {
+                                queue: queue,
+                                member: form
+                            }
+                        );
+                        if(data.ok) {
+                            console.log(data)
+                            queues.find(item => item._id === queueId).units = [...data.members]
+                            setQueues([...queues])
+                            setSettings(null)
+                        }
+                    }
+                }
+            } catch(e) {
+                console.log(e)
+            }
+        } else {
+            console.log('???')
+        }
     }
 
+    function collectData(target, submitter) {
+        if(settings.hasOwnProperty('queue')) {
+            if(submitter === "edit") {
+                return {
+                    user_id: userId,
+                    title: target.name.value,
+                    keyword: target.keyword.value.replace(/\s/g, ''),
+                    description: target.description.value,
+                    date: setServerTime(),
+                } 
+            } else {
+                return {
+                    user_id: userId,
+                    title: target.name.value,
+                    keyword: target.keyword.value.replace(/\s/g, ''),
+                    description: target.description.value,
+                    date: setServerTime(),
+                    wrap: false,
+                    units: [],
+                    ticketNum: 0
+                }
+            }
 
-    function formCollector(target) {
-        if(Object.keys(options).length === 0) {
-            return {
-                title: target.title.value,
-                key: target.key.value,
-                desc: target.desc.value,
-                time: `${month}. ${day} ${year}`,
-                wrap: false,
-                units: []
-            }   
         } else {
             return {
-                _id: options._id,
-                title: target.title.value,
-                key: target.key.value,
-                desc: target.desc.value
+                id : settings.member.memberId,
+                ticket: settings.member.memberTicket,
+                queue_id: queues.find(item => item.wrap === true)._id, 
+                phone: target.phone.value,
+                date: setServerTime()
             }
         }
     }
-    //console.log(month, day, year, clock)
+
     return (
-        active ? (
-            <ModalContainer onClick={ () => { setActive(false); setOptions({}) }}>
-                <ModalContent onClick={ (e) => e.stopPropagation() } onSubmit={handleQueue} >
-                    <TitleText style={{"marginBottom":"10px"}}> { options.modalTitle ? options.modalTitle : "Add new queue" } </TitleText>
+        settings.hasOwnProperty('queue') ? (
+            <Container onClick={() => setSettings(null)}>
+                <Content onSubmit={ e => handleSubmit(e) } onClick={ e => e.stopPropagation() }>
+                    <TitleModal> {settings.queue.title} </TitleModal>
 
-                    <ModalInputContainer>
-                        <ModalInputBlock>
-                            <DescriptionInputText> queue name </DescriptionInputText>
-                            <ModalInputField type="text" name="title" placeholder="Queue name" defaultValue={ options.title } />
-                        </ModalInputBlock>
-                    
-                        <ModalInputBlock>
-                            <DescriptionInputText> keyword </DescriptionInputText>
-                            <ModalInputField type="text" name="key" placeholder="Keyword" defaultValue={ options.key }/>
-                        </ModalInputBlock>
+                    <InputContainer>
+                        <InputsTitleModal> { settings.queue.nameTitle } </InputsTitleModal>
+                        <InputField name="name" 
+                                    placeholder={settings.queue.nameValue} 
+                                    style={!nameErrored ? {} : {background:"rgba(239, 85, 85, 0.14)", color:"rgba(239, 85, 85, 1)"}}
+                                    onChange={() => setNameErrored(false)}
+                                    autoComplete='off'
+                                    defaultValue={settings.queue.nameValue}
+                        />
+                        <AttentionTextModal style={!nameErrored ? {visibility:"hidden"} : {visibility:""}}> Queue name is empty </AttentionTextModal>
+                    </InputContainer>
 
-                        <ModalInputBlock>
-                            <DescriptionInputText> description </DescriptionInputText>
-                            <ModalTextArea name="desc" placeholder="The description of the queue" rows="3" cols="20" defaultValue={ options.desc }/>
-                        </ModalInputBlock>
-                    </ModalInputContainer>
-
-                    <RowContainer style={{"justifyContent":"space-between"}}>
-                        { options.submitButtonValue ? (<ModalSubmitButton type="submit" name="delete" value={options.submitButtonValue}/>) : <ModalSubmitButton type="submit" value="CREATE"/> }
-                        { options.middleButtonValue ? (<ModalSubmitButton type="submit" name="edit" value={options.middleButtonValue}/>) : <></> }
-                        <ActionText style={{"color":"#393B44"}} onClick={ () => { setActive(false); setOptions({}) }}> CLOSE </ActionText>
-                    </RowContainer>
-                </ModalContent>
-            </ModalContainer>
-        ) : activeMember ? (
-            <ModalContainer onClick={ () => { setActiveMember(false) }}>
-                <ModalContent onClick={ (e) => e.stopPropagation() } onSubmit={handleMember} >
-                    <TitleText style={{"marginBottom":"10px"}}> Add new member </TitleText>
-
-                    <ModalInputContainer>
-                        <ModalInputBlock>
-                            <DescriptionInputText> Member number </DescriptionInputText>
-                            <ModalInputField type="text" name="number" placeholder="Member number" maxLength="12"/>
-                        </ModalInputBlock>
-
-                        <ModalInputBlock>
-                            <DescriptionInputText> Time </DescriptionInputText>
-                            <Calendar
-                                locale="en-US"
-                                onChange={setTime}
-                                value={time}
+                    <InputContainer>
+                        <InputsTitleModal> { settings.queue.keywordTitle } </InputsTitleModal>
+                        <Field style={!keywordErrored ? {} : {background:"rgba(239, 85, 85, 0.14)"}}>   
+                            <img src={!keywordErrored ? key : redkey} style={{marginRight:"5px"}} alt="key" />
+                            <InputField name="keyword"
+                                        style=  {!keywordErrored ? { padding:0, width:"95%", background:"inherit" } : 
+                                                { padding:0, width:"95%", background:"rgba(239, 85, 85, 0)", color:"rgba(239, 85, 85, 1)"}} 
+                                        placeholder={settings.queue.keywordValue} 
+                                        onChange={() => setKeywordErrored(false)}
+                                        autoComplete='off'
+                                        defaultValue={settings.queue.keywordValue}
                             />
-                        </ModalInputBlock>
+                        </Field>
+                        <AttentionTextModal style={!keywordErrored ? {visibility:"hidden"} : {visibility:""}}> This keyword is not unique. Change is the keyword. </AttentionTextModal>
+                    </InputContainer>
 
+                    <InputContainer>
+                        <InputsTitleModal> { settings.queue.dateTitle } </InputsTitleModal>
+                        <InputField name="date" type="datetime-local" onChange={(e) => setTime(e.target.value)} autoComplete='off'/>
+                    </InputContainer>
 
-                    </ModalInputContainer>
-
-                    <RowContainer style={{"justifyContent":"space-between"}}>
-                        <ModalSubmitButton type="submit" value="CREATE" />
-                        <ActionText style={{"color":"#393B44"}} onClick={ () => { setActiveMember(false) }}> CLOSE </ActionText>
+                    <InputContainer>
+                        <InputsTitleModal> { settings.queue.descriptionTitle } </InputsTitleModal>
+                        <TextArea name="description" defaultValue={settings.queue.descriptionValue} autoComplete='off' />
+                    </InputContainer>
+                    
+                    <RowContainer style={{justifyContent:"space-between", marginTop:"30px"}}>
+                        <ActionText name="delete" type="submit"> {settings.default.actionText} </ActionText>
+                        {settings.default.editText ? (<ActionText name="edit" type="submit"> {settings.default.editText} </ActionText>) : <></>}
+                        <ActionText style={{color:"#393B44"}} onClick={() => setSettings(null)}> CLOSE </ActionText>
                     </RowContainer>
-                </ModalContent>
-            </ModalContainer>
-        ) : <></> 
-    );
+
+                </Content>
+            </Container>
+        ) : settings.hasOwnProperty('member') ? (
+            
+            <Container onClick={() => setSettings(null)}>
+                {console.log(settings)}
+                <Content onSubmit={ e => handleSubmit(e) } onClick={ e => e.stopPropagation() }  style={{height:"350px"}}>
+                    <TitleModal> {settings.member.title} </TitleModal>
+                    <InputContainer>
+                        <InputContainer>
+                            <InputsTitleModal> { settings.member.phoneTitle } </InputsTitleModal>
+                            <InputField name="phone" 
+                                        defaultValue={ settings.member.phoneValue }
+                                        style={!PhoneErrored ? {} : {background:"rgba(239, 85, 85, 0.14)", color:"rgba(239, 85, 85, 1)"}} 
+                                        type="tel"  
+                                        autoComplete='off' 
+                                        maxLength="16" 
+                                        placeholder='+_(___)___-__-__' 
+                                        onChange={() => setPhoneErrored(false)}
+                        />
+                            {/* <AttentionTextModal> {settings.member.phonePattern} </AttentionTextModal> */}
+                            <AttentionTextModal style={{margin:0}}> {settings.member.phoneAttention} </AttentionTextModal>
+                        </InputContainer>
+
+                        <InputContainer>
+                            <InputsTitleModal> { settings.member.dateTitle } </InputsTitleModal>
+                            <InputField name="date" defaultValue={ settings.member.dateValue } type="datetime-local"  onChange={(e) => setTime(e.target.value)} autoComplete='off'/>
+                        </InputContainer>
+
+                        <InputContainer>
+                            <InputsTitleModal> File upload </InputsTitleModal>
+                            <InputField name="file" type="file"/>
+                        </InputContainer>
+                    </InputContainer>
+                   
+                    <RowContainer style={{justifyContent:"space-between", marginTop:"30px"}}>
+                        {settings.member?.memberId ? (
+                                <><ActionText name="delete" type="submit"> {settings.default.editText} </ActionText></>
+                            ) : (
+                                <><ActionText name="delete" type="submit"> {settings.default.actionText} </ActionText>
+                                </>
+                            )
+                        }
+                        <ActionText style={{color:"#393B44"}} onClick={() => setSettings(null)}> CLOSE </ActionText>
+                    </RowContainer>
+
+                </Content>
+            </Container>
+        ) : <></>
+        
+    );  
 }

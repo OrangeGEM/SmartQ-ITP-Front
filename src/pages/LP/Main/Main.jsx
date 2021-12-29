@@ -72,7 +72,7 @@ export default function Main() {
                 <Step>
                     <MainImage src={step1} />
                     <StepTextContainer>
-                        <TitleText style={{ 'font-size': '54px' }}> How it works </TitleText>
+                        <TitleText style={{ 'fontSize': '54px' }}> How it works </TitleText>
                         <br />
                         <NumberSteps> STEP 1 </NumberSteps>
                         <TextInfo> Register in the service.  </TextInfo>
@@ -111,8 +111,8 @@ export default function Main() {
 
             <StartNowContainer>
                 <TitleText> Start Now </TitleText>
-                <TextInfo style={{'margin-bottom':'15px'}}> And you get the opportunity to </TextInfo>
-                <TextInfo style={{'margin-bottom':'35px'}}> control the entire process. </TextInfo>
+                <TextInfo style={{'marginBottom':'15px'}}> And you get the opportunity to </TextInfo>
+                <TextInfo style={{'marginBottom':'35px'}}> control the entire process. </TextInfo>
 
                 <MainButton 
                         type="button"

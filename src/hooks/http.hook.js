@@ -1,4 +1,4 @@
-import {useState, useCallback} from 'react'
+import {useState, useCallback, useContext} from 'react'
 
 export const useHttp = () => {
     const request = useCallback ( async (url, 
@@ -14,7 +14,7 @@ export const useHttp = () => {
             const data = await response.json();
 
             if(!response.ok) {
-                throw new Error(data.message || "Что-то пошло не так");
+                throw new Error(data.message)
             }
 
             return data;
