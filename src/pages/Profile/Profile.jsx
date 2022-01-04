@@ -16,7 +16,7 @@ export default function Profile() {
     const { isAuthenticated, userId, userEmail } = useContext(AuthContext)
 
     const [queues, setQueues] = useState([]);
-    const [modalSettings, setModalSettings] = useState({})
+    const [modalSettings, setModalSettings] = useState(null)
 
     useEffect(() => {
         if(isAuthenticated) {

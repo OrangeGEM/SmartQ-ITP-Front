@@ -8,12 +8,15 @@ import { Container, Content, InputContainer, InputField, Field, TextArea } from 
 import key from '../../../images/profile/key.svg'
 import redkey from '../../../images/profile/redkey.svg'
 
+import Pending from './Pending';
+
 export default function Modal({settings, setSettings, queues, setQueues}) {
     const [time, setTime] = useState(new Date())
     const [keywordErrored, setKeywordErrored] = useState(false)
     const [nameErrored, setNameErrored] = useState(false)
     const [PhoneErrored, setPhoneErrored] = useState(false)
-
+    const [uploadCount, setUploadCount] = useState(0)
+    const [modalPending, setModalPending] = useState(false)
     const [file, setFile] = useState();
 
     const { userId } = useContext(AuthContext)
@@ -116,10 +119,12 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
 
                         const fileUpload = await axios.post(`${process.env.REACT_APP_API_URL}/api/files/upload`, formData, {
                             onUploadProgress: progressEvent => {
+                                setModalPending(true)
                                 const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
                                 console.log('total', totalLength)
                                 if (totalLength) {
                                     let progress = Math.round((progressEvent.loaded * 100) / totalLength)
+                                    setUploadCount(progress)
                                     console.log(progress)
                                 }
                             }
@@ -204,7 +209,9 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
     }
 
     return (
-        settings.hasOwnProperty('queue') ? (
+        <>
+        { modalPending ? (<Pending totalCount={uploadCount}/>) : <></> }
+        { settings.hasOwnProperty('queue') ? (
             <Container onClick={() => setSettings(null)}>
                 <Content onSubmit={ e => handleSubmit(e) } onClick={ e => e.stopPropagation() }>
                     <TitleModal> {settings.queue.title} </TitleModal>
@@ -301,7 +308,7 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
 
                 </Content>
             </Container>
-        ) : <></>
-        
+        ) : <></>}
+        </>
     );  
 }
