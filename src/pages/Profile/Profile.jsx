@@ -39,7 +39,7 @@ export default function Profile() {
             }
             <ContentContainer>
                 <Header email={userEmail}/>
-                <Top count={queues.length} setSettings={setModalSettings} queues={queues}/>
+                <Top count={queues.length} setSettings={setModalSettings} queues={queues} setQueues={setQueues}/>
                 <Queue queues={queues} setQueues={setQueues} setSettings={setModalSettings}/>
             </ContentContainer>
         </Container>

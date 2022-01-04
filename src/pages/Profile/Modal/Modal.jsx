@@ -144,7 +144,9 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
                     date: setServerTime(),
                     wrap: false,
                     units: [],
-                    ticketNum: 0
+                    ticketNum: 0,
+                    idNum: 0,
+                    active: true
                 }
             }
 
@@ -154,7 +156,8 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
                 ticket: settings.member.memberTicket,
                 queue_id: queues.find(item => item.wrap === true)._id, 
                 phone: target.phone.value,
-                date: setServerTime()
+                date: setServerTime(),
+                active: true
             }
         }
     }
