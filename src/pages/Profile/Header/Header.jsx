@@ -9,8 +9,9 @@ import { ProfileTitleText, RowContainer } from '../../../globalStyles';
 
 import { AuthContext } from '../../../context/auth.context'
 
-export default function Header({ email }) {
-    const { logout } = useContext(AuthContext)
+export default function Header() {
+    const { logout, userEmail } = useContext(AuthContext)
+
     const navigate = useNavigate();
     function handleExit() {
         logout();
@@ -22,7 +23,7 @@ export default function Header({ email }) {
             <img src={logo}/>
 
             <EmailContainer>
-                <ProfileTitleText style={{marginRight: "25px"}}> {email} </ProfileTitleText>
+                <ProfileTitleText style={{marginRight: "25px"}} onClick={() => navigate('/user-profile')}> {userEmail} </ProfileTitleText>
                 <img src={exit} onClick={() => handleExit()}/>
             </EmailContainer>
         </Container>

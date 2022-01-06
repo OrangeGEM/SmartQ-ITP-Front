@@ -42,10 +42,10 @@ export default function SignIn() {
             //console.log('data send: ', form);
             const data = await request(`${process.env.REACT_APP_API_URL}/api/auth/login`, 'POST', {...form})
 
-            //console.log('data recevied: ', data);
+            console.log('data recevied: ', data);
             if(data.accessToken && data.refreshToken) {
                 //console.log(data.userDto.id)
-                auth.login(data.userDto.id)
+                auth.login(data.userDto.id, data.userDto.email);
                 navigate('/profile')
             }
 

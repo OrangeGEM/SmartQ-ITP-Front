@@ -22,6 +22,7 @@ import SignUp from './pages/Auth/SignUp/SignUp.jsx'
 import Profile from './pages/Profile/Profile.jsx';
 import ErrorMessage from './ErrorMessage/ErrorMessage.jsx';
 import NotFound from './pages/NotFound/NotFound.jsx';
+import UserProfile from './pages/UserProfile/UserProfile.jsx';
 
 const GlobalStyles = createGlobalStyle`
   body{
@@ -65,9 +66,16 @@ export default function App() {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="*" element={<NotFound />} />
+          
           <Route path="/profile" element={ 
             <RequireAuth>
               <Profile />
+            </RequireAuth>
+          } />
+
+          <Route path="/user-profile" element={ 
+            <RequireAuth>
+              <UserProfile />
             </RequireAuth>
           } />
         </Routes>

@@ -13,7 +13,7 @@ import Modal from './Modal/Modal';
 
 export default function Profile() {
     const { request } = useHttp();
-    const { isAuthenticated, userId, userEmail } = useContext(AuthContext)
+    const { isAuthenticated, userId } = useContext(AuthContext)
 
     const [queues, setQueues] = useState([]);
     const [modalSettings, setModalSettings] = useState({})
@@ -38,7 +38,7 @@ export default function Profile() {
                 ) : <></>
             }
             <ContentContainer>
-                <Header email={userEmail}/>
+                <Header />
                 <Top count={queues.length} setSettings={setModalSettings} queues={queues}/>
                 <Queue queues={queues} setQueues={setQueues} setSettings={setModalSettings}/>
             </ContentContainer>
