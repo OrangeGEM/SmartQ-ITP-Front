@@ -7,7 +7,7 @@ import { Container, Content, InputContainer, InputField, Field, TextArea } from 
 import key from '../../../images/profile/key.svg'
 import redkey from '../../../images/profile/redkey.svg'
 
-export default function Modal({settings, setSettings, queues, setQueues}) {
+export default function Modal({settings, setSettings, queues, setQueues, changeQueueCount}) {
     const [time, setTime] = useState(new Date())
     const [keywordErrored, setKeywordErrored] = useState(false)
     const [nameErrored, setNameErrored] = useState(false)
@@ -43,6 +43,7 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
                             console.log('Received data:', data)
                             setQueues([...queues, form])
                             setSettings(null)
+                            changeQueueCount(1);
                         }
                     } catch(e) {
                         console.log(e)
@@ -56,6 +57,7 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
                             console.log('Received data:', data)
                             setQueues(queues.filter(item => item._id !== queueId));
                             setSettings(null)
+                            changeQueueCount(-1)
                         }
                     } catch(e) {
                         console.log(e)

@@ -4,7 +4,7 @@ import { Container } from './styled'
 import plus from '../../../images/profile/add.svg'
 import { ColumnContainer, ProfileAddQueue, ProfileTitleText, ProfileTotalQueue, RowContainer } from '../../../globalStyles';
 
-export default function Top({ count, setSettings, queues, setQueues }) {
+export default function Top({ count, setSettings, queues, setQueues, setSubmitModal }) {
     const { request } = useHttp();
 
     function setModalQueuesSettings() {
@@ -50,17 +50,7 @@ export default function Top({ count, setSettings, queues, setQueues }) {
     }
     
     async function handleResetMembers() {
-        const queue = queues.find((item) => item.wrap === true)
-        const data = await request(`${process.env.REACT_APP_API_URL}/api/profile/resetmembers`, 'POST', {id: queue._id});
-        console.log(data);
-
-        queues.forEach(element => {
-            if(element._id == queue._id) {
-                element = Object.assign(element, data.queue)
-                element.wrap = true;
-            }
-        });
-        setQueues([...queues]);
+        setSubmitModal(true)
     }
 
     return (
@@ -75,22 +65,23 @@ export default function Top({ count, setSettings, queues, setQueues }) {
                     <img src={plus} style={{width:"19px", height:"19px", cursor:"pointer"}}/>
                 </RowContainer>
 
-                {
-                    queues.find(item => item.wrap === true)?.wrap ? (
-                        <>
-                        <RowContainer name="member" style={{alignItems:"center"}} onClick={setModalMembersSettings}>
-                            <ProfileAddQueue> ADD NEW MEMBER </ProfileAddQueue>
-                            <img src={plus} style={{width:"19px", height:"19px", cursor:"pointer"}}/>
-                        </RowContainer>
+                <RowContainer   
+                    name="member" 
+                    style={queues.find(item => item.wrap === true)?.wrap ? {visibility:"visible", alignItems:"center", marginBottom:"10px"} : {visibility:"hidden", alignItems:"center", marginBottom:"10px"}} 
+                    onClick={setModalMembersSettings}
+                >
+                    <ProfileAddQueue> ADD NEW MEMBER </ProfileAddQueue>
+                    <img src={plus} style={{width:"19px", height:"19px", cursor:"pointer"}}/>
+                </RowContainer>
 
-                        <RowContainer name="nulling" style={{alignItems:"center"}} onClick={handleResetMembers}>
-                            <ProfileAddQueue> RESET ALL MEMBERS </ProfileAddQueue>
-                        </RowContainer>
-                        </>
-                    ) : <></>
-                }
+                <RowContainer 
+                    name="nulling" 
+                    style={queues.find(item => item.wrap === true)?.wrap ? {visibility:"visible", alignItems:"center"} : {visibility:"hidden", alignItems:"center"}} 
+                    onClick={handleResetMembers}
+                >
+                    <ProfileAddQueue> RESET ALL MEMBERS </ProfileAddQueue>
+                </RowContainer>
             </ColumnContainer>
-
         </Container>
     );
 }

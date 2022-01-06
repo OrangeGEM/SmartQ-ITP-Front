@@ -55,7 +55,7 @@ export default function Queues({ queue, handleWrap, setSettings }) {
                             </RowContainer>
                             <RowContainer style={{ alignSelf: "flex-end", marginBottom: "15px" }}>
                                 <img src={group} /> 
-                                <ProfileTitleText style={{ marginLeft: "7px" }}> {/*queue.units.length*/} 0 </ProfileTitleText>
+                                <ProfileTitleText style={{ marginLeft: "7px" }}> { queue.units.filter( item => item.active === true).length } </ProfileTitleText>
                             </RowContainer>
                             <DescriptionText> {setQueueTime(queue.date)} </DescriptionText>
                         </ColumnContainer>

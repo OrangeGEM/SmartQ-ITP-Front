@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {HeaderContainer, Image, HeaderButton} from "./styled";
@@ -8,31 +8,35 @@ import logo from '../../../images/lpLogo.png'
 
 
 
-export default function Header() {
-    const [queueCount, setQueueCount] = useState(0)
-
+export default function Header({socket}) {
     const { isAuthenticated } = useContext(AuthContext);
-    const { request } = useHttp();
-    const navigate = useNavigate();
+    const navigate = useNavigate(); 
+    const [queueCount, setQueueCount] = useState(null);
 
     useEffect(() => {
-        async function requestQueueCount() {
-            const data = await request(`${process.env.REACT_APP_API_URL}/api/landing/queuecount`, 'POST')
-            setQueueCount(data.count)
-        }
-        requestQueueCount();
-    },[])
+        socket?.emit('getQueueCount');
+        socket?.on('getQueueCount', (data) => {
+            console.log('[SocketIO] -> Emited from server (getQueueCount)', data);
+            setQueueCount(data);
+        })
 
-    function handleClick(e) { //delete andsunctionality
-        console.log('User authorized: ', isAuthenticated)
-        isAuthenticated ? navigate('/profile') : navigate('/signin')
-    }
+        socket?.on('changeQueueCount', (data) => {
+            console.log('[SocketIO] -> Emited from server (changeQueueCount)', data);
+            setQueueCount(data);
+        })
+    }, [socket]) 
 
     return (
         <HeaderContainer>
             <Image src={logo}/>
-            <h1> Current queue count: {queueCount} </h1>
-            <HeaderButton onClick={ e => handleClick(e) } type="button" value={ isAuthenticated ? "MY QUEUES" : "SIGN IN" } />
+            <h1> {queueCount ? `Current queue count: ${queueCount}` : `Not connected`} </h1>
+           
+
+            <HeaderButton 
+                onClick={ e => {isAuthenticated ? navigate('/profile') : navigate('/signin')} } 
+                type="button" 
+                value={ isAuthenticated ? "MY QUEUES" : "SIGN IN" } 
+            />
         </HeaderContainer>
     )
 }
