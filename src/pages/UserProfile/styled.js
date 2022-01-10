@@ -6,4 +6,14 @@ export const Container = styled.div`
     height: 100%;
     display: flex;
     justify-content: center;
+
+    background-color: #F1F3F8;
+`;
+
+export const InnerContent = styled.div`
+    width: 80%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid;
 `;
