@@ -7,10 +7,9 @@ import { useHttp } from '../../../hooks/http.hook';
 import { Container, Content, InputContainer, InputField, Field, TextArea } from './styled'
 import key from '../../../images/profile/key.svg'
 import redkey from '../../../images/profile/redkey.svg'
-
 import Pending from './Pending';
 
-export default function Modal({settings, setSettings, queues, setQueues}) {
+export default function Modal({settings, setSettings, queues, setQueues, changeQueueCount}) {
     const [time, setTime] = useState(new Date())
     const [keywordErrored, setKeywordErrored] = useState(false)
     const [nameErrored, setNameErrored] = useState(false)
@@ -45,9 +44,11 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
                     try {
                         const data = await request(`${process.env.REACT_APP_API_URL}/api/profile/createqueue`, 'POST', form)
                         if(data.ok) {
-                            console.log('Received data:', data);
-                            setQueues([...queues, data.queue]);
-                            setSettings(null);
+                            form._id = data._id;
+                            console.log('Received data:', data)
+                            setQueues([...queues, form])
+                            setSettings(null)
+                            changeQueueCount(1);
                         }
                         console.log(queues)
                     } catch(e) {
@@ -62,6 +63,7 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
                             console.log('Received data:', data)
                             setQueues(queues.filter(item => item._id !== queueId));
                             setSettings(null)
+                            changeQueueCount(-1)
                         }
                     } catch(e) {
                         console.log(e)
@@ -186,7 +188,9 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
                     date: setServerTime(),
                     wrap: false,
                     units: [],
-                    ticketNum: 0
+                    ticketNum: 0,
+                    idNum: 0,
+                    active: true
                 }
             }
 
@@ -196,7 +200,8 @@ export default function Modal({settings, setSettings, queues, setQueues}) {
                 ticket: settings.member.memberTicket,
                 queue_id: queues.find(item => item.wrap === true)._id, 
                 phone: target.phone.value,
-                date: setServerTime()
+                date: setServerTime(),
+                active: true
             }
         }
     }
