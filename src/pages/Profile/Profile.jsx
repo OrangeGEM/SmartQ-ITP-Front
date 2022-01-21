@@ -20,6 +20,7 @@ export default function Profile({socket}) {
     const [modalSettings, setModalSettings] = useState({})
     const [submitModal, setSubmitModal] = useState(false)
 
+
     useEffect(() => {
         if(isAuthenticated) {
             async function getQueue() {

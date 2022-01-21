@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
 import { ActionText, AttentionTextModal, ColumnContainer, InputsTitleModal, RowContainer, TitleModal } from '../../../globalStyles';
 import { AuthContext } from '../../../context/auth.context'
 import { useDate } from '../../../hooks/date.hook';
@@ -6,12 +7,16 @@ import { useHttp } from '../../../hooks/http.hook';
 import { Container, Content, InputContainer, InputField, Field, TextArea } from './styled'
 import key from '../../../images/profile/key.svg'
 import redkey from '../../../images/profile/redkey.svg'
+import Pending from './Pending';
 
 export default function Modal({settings, setSettings, queues, setQueues, changeQueueCount}) {
     const [time, setTime] = useState(new Date())
     const [keywordErrored, setKeywordErrored] = useState(false)
     const [nameErrored, setNameErrored] = useState(false)
     const [PhoneErrored, setPhoneErrored] = useState(false)
+    const [uploadCount, setUploadCount] = useState(0)
+    const [modalPending, setModalPending] = useState(false)
+    const [file, setFile] = useState();
 
     const { userId } = useContext(AuthContext)
     const { request } = useHttp();
@@ -45,6 +50,7 @@ export default function Modal({settings, setSettings, queues, setQueues, changeQ
                             setSettings(null)
                             changeQueueCount(1);
                         }
+                        console.log(queues)
                     } catch(e) {
                         console.log(e)
                     }
@@ -86,16 +92,51 @@ export default function Modal({settings, setSettings, queues, setQueues, changeQ
             const pattern = /[\+]*[7-8]{1}\s?[\(]*9[0-9]{2}[\)]*\s?\d{3}[-]*\d{2}[-]*\d{2}/
             const isPhoneErrored = pattern.test(form.phone);
             setPhoneErrored(!isPhoneErrored)
-            console.log(isPhoneErrored)
+            //console.log(isPhoneErrored)
             try {
                 if( isPhoneErrored ) {
                     if(settings.default.editText === "") {
+                        console.log(file)
+
+
+
                         const data = await request(
                             `${process.env.REACT_APP_API_URL}/api/profile/createmember`, 'POST', {
                                 queue: queue, 
-                                member: {phone:form.phone, date: form.date}
+                                member: {phone:form.phone, date: form.date},
+                                dir_id: queue.dir_id,
+                                userId: userId
                             }
                         );
+
+                        let formData = new FormData();
+                        formData.append('file', file);
+                        formData.append('userId', userId);
+                        formData.append('parent', data.dir_id);
+
+                        console.log(Array.from(formData.keys()).reduce((acc, cur) => {
+                            acc[cur] = formData.get(cur)
+                            return acc;
+                        }, {}))
+
+                        const fileUpload = await axios.post(`${process.env.REACT_APP_API_URL}/api/files/upload`, formData, {
+                            onUploadProgress: progressEvent => {
+                                setModalPending(true)
+                                const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
+                                console.log('total', totalLength)
+                                if (totalLength) {
+                                    let progress = Math.round((progressEvent.loaded * 100) / totalLength)
+                                    setUploadCount(progress)
+                                    console.log(progress)
+                                }
+                            }
+                        })
+
+                        // await request(`${process.env.REACT_APP_API_URL}/api/files/upload`, 'POST', formdata, {
+                        //     "Content-type": "multipart/form-data" 
+                        // })
+                        console.log(fileUpload)
+
                         if(data.ok) {
                             console.log('Received data:', data)
                             queues.find(item => item._id === queueId).units.push(data.member)
@@ -103,6 +144,7 @@ export default function Modal({settings, setSettings, queues, setQueues, changeQ
                             setQueues([...queues])
                             setSettings(null)
                         }
+
                         
                     } else {
                         const data = await request(
@@ -164,8 +206,17 @@ export default function Modal({settings, setSettings, queues, setQueues, changeQ
         }
     }
 
+    function UploadContent(event) {
+        event.preventDefault();
+        if(event.target.files[0]) {
+            setFile(event.target.files[0])
+        }
+    }
+
     return (
-        settings.hasOwnProperty('queue') ? (
+        <>
+        { modalPending ? (<Pending totalCount={uploadCount}/>) : <></> }
+        { settings.hasOwnProperty('queue') ? (
             <Container onClick={() => setSettings(null)}>
                 <Content onSubmit={ e => handleSubmit(e) } onClick={ e => e.stopPropagation() }>
                     <TitleModal> {settings.queue.title} </TitleModal>
@@ -219,7 +270,7 @@ export default function Modal({settings, setSettings, queues, setQueues, changeQ
         ) : settings.hasOwnProperty('member') ? (
             
             <Container onClick={() => setSettings(null)}>
-                {console.log(settings)}
+                {/* console.log(settings) */}
                 <Content onSubmit={ e => handleSubmit(e) } onClick={ e => e.stopPropagation() }  style={{height:"350px"}}>
                     <TitleModal> {settings.member.title} </TitleModal>
                     <InputContainer>
@@ -245,7 +296,7 @@ export default function Modal({settings, setSettings, queues, setQueues, changeQ
 
                         <InputContainer>
                             <InputsTitleModal> File upload </InputsTitleModal>
-                            <InputField name="file" type="file"/>
+                            <InputField name="file" type="file" multiple="multiple" onChange={UploadContent}/>
                         </InputContainer>
                     </InputContainer>
                    
@@ -262,7 +313,7 @@ export default function Modal({settings, setSettings, queues, setQueues, changeQ
 
                 </Content>
             </Container>
-        ) : <></>
-        
+        ) : <></>}
+        </>
     );  
 }

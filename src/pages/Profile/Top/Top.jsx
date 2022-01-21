@@ -26,7 +26,7 @@ export default function Top({ count, setSettings, queues, setQueues, setSubmitMo
             }
         }
         setSettings(settings)
-        console.log('Set options:', settings)
+        //console.log('Set options:', settings)
     }
 
     function setModalMembersSettings() {
