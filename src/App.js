@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useLayoutEffect } from 'react';
 import {
   BrowserRouter,
   Routes,
   Route
 } from "react-router-dom";
+
 import { io } from 'socket.io-client';
 
 import { createGlobalStyle } from "styled-components";
@@ -43,11 +44,19 @@ export default function App() {
   const ErrorHandler = useContext(ErrorContext)
   const { errorTitle, errorMessage, setError } = useError()
 
-  useEffect(() => {
-    const socket = io('http://localhost:5001', {
-      withCredentials: true
-    })
-  }, [])
+  const [socket, setSocket] = useState();
+
+    useLayoutEffect(() => {
+        const fetchSocket = async () => {
+            const openSocket = await io('http://localhost:5001', {
+                withCredentials: true
+            })
+            await setSocket(openSocket);
+            console.log('Socket connected');
+            console.log(openSocket);
+        }
+        fetchSocket();
+    }, [])
 
 
   //console.log(AuthContext)
@@ -61,13 +70,13 @@ export default function App() {
       <GlobalStyles />
       
         <Routes>
-          <Route path="/" element={<LP />} exact />
+          <Route path="/" element={<LP socket={socket}/>} exact />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/profile" element={ 
             <RequireAuth>
-              <Profile />
+              <Profile socket={socket}/>
             </RequireAuth>
           } />
         </Routes>

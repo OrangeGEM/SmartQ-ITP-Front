@@ -9,9 +9,10 @@ import { Container, QueuesContainer, MembersContainer } from './styled'
 
 export default function Queue({ queues, setQueues, setSettings }) {
     const [members, setMembers] = useState([])
-    console.log(members)
     const { request } = useHttp();
+
     useEffect(() => {
+        console.log(members)
         setMembers(queues.find((obj) => { return (obj.wrap === true) })?.units);
     }, [queues])
 
@@ -24,8 +25,9 @@ export default function Queue({ queues, setQueues, setSettings }) {
 
     async function handleDeleteMember(id) {
         try {
-            const wrappedQueueId = queues.find(item => { return (item.wrap == true) })._id
-            const membersWithDelete = members.filter(item => { return (item.id != id) })
+            const wrappedQueueId = queues.find(item => { return (item.wrap == true) })._id;
+            queues.find(item => { return (item.wrap == true) }).units.find(item => { return (item.id == id) }).active = false;
+            const membersWithDelete = queues.find(item => { return (item.wrap == true) }).units;
 
             const data = await request(`${process.env.REACT_APP_API_URL}/api/profile/deletemember`, 'POST', {queueId: wrappedQueueId, members: membersWithDelete})
             if(data) {
@@ -56,13 +58,13 @@ export default function Queue({ queues, setQueues, setSettings }) {
             <MembersContainer>
             {   
                 members ? members.map((item, index) => {
-                    return (
-                        <Members 
+                    return ( item.active ? 
+                        ( <Members 
                             member={item} 
                             index={index} 
                             handleDelete={handleDeleteMember}
                             setSettings={setSettings}
-                        />
+                        /> ) : <></>
                     )
                 }) : <></>
             }

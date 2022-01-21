@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 
 import Header from './Header/Header';
 import Main from './Main/Main';
@@ -25,11 +25,13 @@ const ContentContainer = styled.div`
     }
 `;
 
-export default function LP() {
+    
+
+export default function LP({socket}) {
     return (
         <Conteiner>
             <ContentContainer>
-                <Header />
+                <Header socket={socket}/>
                 <Main />
                 <Footer />
             </ContentContainer>
